@@ -18,6 +18,7 @@
 
     <!-- Custom styles for this template -->
     <link href="{% static 'css/public/public.css' %}" rel="stylesheet">
+    <link href="{% static 'css/pu/dashboard.css' %}" rel="stylesheet">
 
     {% block extracss %}
     {% endblock %}
@@ -29,16 +30,22 @@
     <div class="collapse navbar-collapse" id="navbarsExampleDefault">
         <ul class="navbar-nav mr-auto">
             <li class="nav-item active">
-                <a class="nav-link" href="{% url 'index' %}">Home</a>
+                <a class="nav-link" href="{% url 'index' %}">Домашняя страница</a>
             </li>
         </ul>
     </div>
 </nav>
 
-<main role="main" class="container">
-    {% block content %}
-    {% endblock %}
-</main><!-- /.container -->
+<div class="container-fluid">
+    <div class="row">
+
+        <main role="main" class="col-md-9 ml-sm-auto col-lg-10 pt-3 px-4">
+            {% include 'base_messages.html' %}
+            {% block content %}
+            {% endblock %}
+        </main>
+    </div>
+</div>
 
 <!-- Bootstrap core JavaScript
 ================================================== -->

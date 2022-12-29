@@ -1,0 +1,32 @@
+{% extends 'Polls/polls_base.html' %}
+
+{% block content %}
+    <div class="row">
+        <div class="col-sm-6">
+            <div class="row form-group">
+                <div class="col-sm-5">ID</div>
+                <div class="col-sm-7">{{ response.id|default:"-" }}</div>
+            </div>
+            <div class="row form-group">
+                <div class="col-sm-5">Created stamp</div>
+                <div class="col-sm-7">{{ response.created_stamp|default:"-" }}</div>
+            </div>
+            <div class="row form-group">
+                <div class="col-sm-5">Form</div>
+                <div class="col-sm-7">
+                    <a href="{{ response.form_link.link }}">
+                        {{ response.form_link.label|default:"-" }}
+                    </a>
+                </div>
+            </div>
+            <div class="row form-group">
+                <div class="col-sm-5">Is send</div>
+                <div class="col-sm-7">{{ response.is_send|default:"-" }}</div>
+            </div>
+            <div class="row form-group">
+                <div class="col-sm-5">Response</div>
+                <div class="col-sm-7">{{ json_data|linebreaks }}</div>
+            </div>
+        </div>
+    </div>
+{% endblock %}

@@ -1,10 +1,6 @@
 [
   {
-    "label": "New Year poll",
+    "label": "Новогодний опросник",
     "reverse": "new-year-poll"
-  },
-  {
-    "label": "QWE",
-    "reverse": "QWe"
   }
 ]

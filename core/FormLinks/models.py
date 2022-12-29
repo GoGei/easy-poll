@@ -9,5 +9,10 @@ class FormLinks(models.Model):
     class Meta:
         db_table = 'form_link'
 
+    @classmethod
+    def get_by_url(cls, rev_url):
+        url = rev_url.replace('/', '')
+        return cls.objects.get(link__icontains=url)
+
     def __str__(self):
         return f'{self.label}'

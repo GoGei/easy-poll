@@ -1,0 +1,5 @@
+{% autoescape off %}
+    Stamp: {{ response.created_stamp }}<br>
+    Link: {{ response.form_link.label }}<br>
+    Response: {{ response.response|pprint }}<br>
+{% endautoescape %}
