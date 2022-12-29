@@ -2,7 +2,23 @@
 
 {% block content %}
     <div class="starter-template">
-        <h1>This is your daily dose of jokes!</h1>
-        <p class="lead">Go to the all jokes and enjoy it!</p>
+        <h1>Тут все формы!</h1>
+        <p class="lead">Пожалуйста, найдите нужную вам форму</p>
+    </div>
+
+    <div class="p-3">
+        <h4 class="font-italic">Формы</h4>
+        <input class="form-control mr-sm-2" type="search" placeholder="Тут можно найти форму.."
+               aria-label="Search" id="formLinksSearch">
+        <ol class="list-unstyled mb-0" id="formLinksContainer">
+            {% for forms_link in forms_links %}
+                <li class="form-link-row"
+                data-label="{{ forms_link.label }}">
+                    <a href="{{ forms_link.link }}">{{ forms_link.label }}</a>
+                </li>
+            {% empty %}
+                Нет никаких форм (
+            {% endfor %}
+        </ol>
     </div>
 {% endblock %}

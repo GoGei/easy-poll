@@ -16,6 +16,8 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'widget_tweaks',
+    'core.Utils',
     'core.FormLinks',
     'core.ResponseCollector',
 ]
@@ -36,6 +38,7 @@ TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
         'DIRS': [
+            BASE_DIR + 'core/templates/',
             BASE_DIR + 'Polls/templates/',
         ],
         'APP_DIRS': True,

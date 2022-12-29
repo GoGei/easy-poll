@@ -11,6 +11,13 @@ class ResponseCollector(models.Model):
     class Meta:
         db_table = 'response_collector'
 
+    @classmethod
+    def create_from_response(cls, data):
+        response = cls()
+        response.response = data
+        response.save()
+        return response
+
     def __str__(self):
         return f'Response at {self.created_stamp}'
 
