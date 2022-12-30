@@ -21,7 +21,7 @@ def _launch_django(project_path):
 
     server_address = '127.0.0.1'
     with lcd(project_path):
-        local(f'./manage.py runserver {server_address}:{port}', capture=False)
+        local(f'python manage.py runserver {server_address}:{port}', capture=False)
 
 
 @task
