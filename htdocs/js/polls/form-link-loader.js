@@ -1,5 +1,4 @@
 $(document).ready(function () {
-    console.log('there');
     $('#formLinksSearch').on('keyup', function () {
         let value = this.value;
         let formLinks = $('.form-link-row');

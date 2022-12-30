@@ -1,0 +1,12 @@
+{% extends 'Polls/polls_base.html' %}
+
+{% load static %}
+
+{% block content %}
+    <h1>{{ form.title }}</h1>
+    {% include 'base_form.html' with form=form %}
+{% endblock %}
+
+{% block extrajs %}
+    <script src="{% static 'js/polls/new-year-poll.js' %}"></script>
+{% endblock %}

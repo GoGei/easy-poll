@@ -18,7 +18,7 @@
 
     <!-- Custom styles for this template -->
     <link href="{% static 'css/public/public.css' %}" rel="stylesheet">
-    <link href="{% static 'css/pu/dashboard.css' %}" rel="stylesheet">
+    <link href="{% static 'css/public/dashboard.css' %}" rel="stylesheet">
 
     {% block extracss %}
     {% endblock %}
@@ -38,8 +38,7 @@
 
 <div class="container-fluid">
     <div class="row">
-
-        <main role="main" class="col-md-9 ml-sm-auto col-lg-10 pt-3 px-4">
+        <main role="main" class="container">
             {% include 'base_messages.html' %}
             {% block content %}
             {% endblock %}

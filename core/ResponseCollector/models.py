@@ -17,13 +17,14 @@ class ResponseCollector(models.Model):
     form_link = models.ForeignKey('FormLinks.FormLinks', on_delete=models.PROTECT)
     response = JSONField()
     is_send = models.BooleanField(default=False)
+    on_validation = models.BooleanField(default=False)
 
     class Meta:
         db_table = 'response_collector'
 
     @classmethod
-    def create_from_response(cls, data, form_link):
-        response = cls()
+    def create_from_response(cls, data, form_link, **kwargs):
+        response = cls(**kwargs)
         response.response = data
         response.form_link = FormLinks.get_by_url(form_link)
         response.save()

@@ -40,36 +40,43 @@ def home_responses(request):
 
 def response_view(request, response_id):
     response = get_object_or_404(ResponseCollector, pk=response_id)
-    json_data = json.dumps(response.response, indent=3)
+    json_data = json.dumps(response.response, indent=3, ensure_ascii=False)
 
     return render(request, 'Polls/responses/view.html',
                   {'response': response,
                    'json_data': json_data})
 
 
-def __base_view(request, form):
+def __base_view(request, form, html_to_render):
     """ General view to render and collect response """
     if '_cancel' in request.POST:
         return redirect(reverse('index'))
 
+    url = request.path
+
     form_body = form(request.POST or None)
     if form_body.is_valid():
         response = ResponseCollector.create_from_response(data=form_body.cleaned_data,
-                                                          form_link=request.path)
+                                                          form_link=url)
         response = response.send()
         if response.is_send:
             return render(request, 'Polls/success.html', {'response': response})
         else:
             return render(request, 'Polls/error.html', {'response': response})
+    elif form_body.is_valid() and request.method == 'POST':
+        response = ResponseCollector.create_from_response(data=form_body.cleaned_data,
+                                                          form_link=url,
+                                                          on_validation=True)
+        response.send()
 
     form = {
-        'title': FormLinks.get_by_url(request.path).label,
+        'title': FormLinks.get_by_url(url).label,
         'body': form_body,
         'buttons': {'save': True, 'cancel': True},
     }
 
-    return render(request, 'Polls/poll_form.html', {'form': form})
+    return render(request, html_to_render, {'form': form})
 
 
 def new_year_poll(request):
-    return __base_view(request, forms.NewYearPollForm)
+    return __base_view(request, forms.NewYearPollForm, html_to_render='Polls/polls/new_year_form.html')

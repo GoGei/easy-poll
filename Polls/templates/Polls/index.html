@@ -10,15 +10,15 @@
         <h4 class="font-italic">Формы</h4>
         <input class="form-control mr-sm-2" type="search" placeholder="Тут можно найти форму.."
                aria-label="Search" id="formLinksSearch">
-        <ol class="list-unstyled mb-0" id="formLinksContainer">
+        <ul class="list-group mb-0" id="formLinksContainer">
             {% for forms_link in forms_links %}
-                <li class="form-link-row"
-                data-label="{{ forms_link.label }}">
+                <li class="list-group-item form-link-row"
+                    data-label="{{ forms_link.label }}">
                     <a href="{{ forms_link.link }}">{{ forms_link.label }}</a>
                 </li>
             {% empty %}
                 Нет никаких форм (
             {% endfor %}
-        </ol>
+        </ul>
     </div>
 {% endblock %}
