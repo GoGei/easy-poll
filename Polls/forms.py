@@ -27,11 +27,13 @@ ERROR_MESSAGES = {
     'required': 'Заполни это поле'
 }
 
-YES_NO_CHOICES = [(True, 'Да'),
-                  (False, 'Нет')]
+YES_NO_CHOICES = [
+    (None, 'Выберите пожалуйста'),
+    (True, 'Да'),
+    (False, 'Нет')]
 
 
-class NewYearPollForm(forms.Form):
+class NewYearPoll_2022_2023_Form(forms.Form):
     trip = forms.CharField(max_length=128,
                            label='Как вы доехали?',
                            error_messages=ERROR_MESSAGES)

@@ -9,7 +9,7 @@ from .tables import ResponseTable
 
 
 def home_index(request):
-    forms_links = FormLinks.objects.all().order_by('-label')
+    forms_links = FormLinks.objects.filter(wait_for_delete=False).order_by('-label')
     return render(request, 'Polls/index.html', {'forms_links': forms_links})
 
 
@@ -78,5 +78,7 @@ def __base_view(request, form, html_to_render):
     return render(request, html_to_render, {'form': form})
 
 
-def new_year_poll(request):
-    return __base_view(request, forms.NewYearPollForm, html_to_render='Polls/polls/new_year_form.html')
+def new_year_poll_2022_2023(request):
+    form = forms.NewYearPoll_2022_2023_Form
+    template = 'Polls/polls/new_year_2022_2023_form.html'
+    return __base_view(request, form=form, html_to_render=template)
