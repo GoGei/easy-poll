@@ -3,10 +3,12 @@ from django import forms
 from django.db.models import Q
 
 from core.ResponseCollector.models import ResponseCollector
+from . import fields
 
 
 class ResponseFilterForm(django_filters.FilterSet):
     SEARCH_FIELDS = ['form_link__label']
+
     search = django_filters.CharFilter(label='Search', method='search_qs',
                                        widget=forms.TextInput(attrs={'type': 'search'}))
 
@@ -23,57 +25,79 @@ class ResponseFilterForm(django_filters.FilterSet):
         fields = ['search', 'form_link', 'on_validation']
 
 
-ERROR_MESSAGES = {
-    'required': 'Заполни это поле'
-}
-
-YES_NO_CHOICES = [
-    (None, 'Выберите пожалуйста'),
-    (True, 'Да'),
-    (False, 'Нет')]
-
-
 class NewYearPoll_2022_2023_Form(forms.Form):
-    trip = forms.CharField(max_length=128,
-                           label='Как вы доехали?',
-                           error_messages=ERROR_MESSAGES)
-    greeted = forms.TypedChoiceField(choices=YES_NO_CHOICES,
-                                     label='Вам понравилось как вас встретили?',
-                                     coerce=bool,
-                                     error_messages=ERROR_MESSAGES)
-    want_sleep = forms.TypedChoiceField(choices=YES_NO_CHOICES,
-                                        label='Вы хотели спать?',
-                                        coerce=bool,
-                                        error_messages=ERROR_MESSAGES)
-    go_to_walk_after_meet = forms.TypedChoiceField(choices=YES_NO_CHOICES,
-                                                   label='Вы пошли гулять после того, как вас встретили?',
-                                                   coerce=bool,
-                                                   error_messages=ERROR_MESSAGES)
-    is_coffee_good = forms.TypedChoiceField(choices=YES_NO_CHOICES,
-                                            label='Вам принесли вкусный кофе?',
-                                            coerce=bool,
-                                            error_messages=ERROR_MESSAGES)
-    is_fed_well = forms.TypedChoiceField(choices=YES_NO_CHOICES,
-                                         label='Вас хорошо накормили?',
-                                         coerce=bool,
-                                         error_messages=ERROR_MESSAGES)
-    flowers = forms.TypedChoiceField(choices=YES_NO_CHOICES,
-                                     label='Вам нравятся ваши цветы?',
-                                     coerce=bool,
-                                     error_messages=ERROR_MESSAGES)
-    choose_shoes = forms.TypedChoiceField(choices=YES_NO_CHOICES,
-                                          label='Вы выбрали обувь?',
-                                          coerce=bool,
-                                          error_messages=ERROR_MESSAGES)
-    was_date = forms.TypedChoiceField(choices=YES_NO_CHOICES,
-                                      label='Вы сходили на свидание?',
-                                      coerce=bool,
-                                      error_messages=ERROR_MESSAGES)
-    date_comment = forms.CharField(widget=forms.Textarea,
-                                   required=False,
-                                   label='Ваш комментарий по свиданию',
-                                   error_messages=ERROR_MESSAGES)
-    gift_found = forms.TypedChoiceField(choices=YES_NO_CHOICES,
-                                        label='Вы уже нашли ваш новогодний подарок?',
-                                        coerce=bool,
-                                        error_messages=ERROR_MESSAGES)
+    trip = fields.TextField(label='Как вы доехали?')
+    greeted = fields.YesNoChoiceField(label='Вам понравилось как вас встретили?')
+    want_sleep = fields.YesNoChoiceField(label='Вы хотели спать?')
+    go_to_walk_after_meet = fields.YesNoChoiceField(label='Вы пошли гулять после того, как вас встретили?')
+    is_coffee_good = fields.YesNoChoiceField(label='Вам принесли вкусный кофе?')
+    is_fed_well = fields.YesNoChoiceField(label='Вас хорошо накормили?')
+    flowers = fields.YesNoChoiceField(label='Вам нравятся ваши цветы?')
+    choose_shoes = fields.YesNoChoiceField(label='Вы выбрали обувь?')
+    was_date = fields.YesNoChoiceField(label='Вы сходили на свидание?')
+    date_comment = fields.TextAreaField(label='Ваш комментарий по свиданию')
+    gift_found = fields.YesNoChoiceField(label='Вы уже нашли ваш новогодний подарок?')
+
+
+class AfterNewYearPoll_2022_2023_Form(forms.Form):
+    WATCHED_FILMS = [
+        ('bruno', 'Бруно'),
+        ('wednesday', 'Уэнсдэй'),
+        ('my_boyfriend_from_zoo', 'Мой парень из зоопарка'),
+        ('how_i_met_your_mom', 'Как я встретил вашу маму'),
+    ]
+    SALADS = [
+        ('olivie', 'Оливье'),
+        ('green_salad', 'Салат из зелени'),
+        ('mimosa', 'Мимоза'),
+        ('chicken_pineapple', 'Салат с курицей и ананасами и др. ингредиентами')
+    ]
+    LOOK_AT_CHOICES = [
+        (None, 'Выберите пожалуйста'),
+        (1, 'Не смотрела'),
+        (2, 'Не часто'),
+        (3, 'Обращала внимание'),
+        (4, 'Часто'),
+        (5, 'Смотрела постоянно')
+    ]
+    MASSAGE_RATE_CHOICES = [
+        (None, 'Выберите пожалуйста'),
+        (1, 'Плохо'),
+        (2, 'Не очень'),
+        (3, 'Нормально'),
+        (4, 'Хорошо'),
+        (5, 'Отлично')
+    ]
+
+    is_enjoy_your_time = fields.YesNoChoiceField(label='Вам понравилось как вы провели время?')
+    is_you_like_way_treated = fields.YesNoChoiceField(label='Вам понравилось как с вами обращались?')
+
+    comment_on_treated = fields.TextAreaField(
+        label='Оставьте ваш комментарий по поводу того, как с вами обращались', max_length=4096,
+        attrs={'type': 'hidden', 'style': 'display: none;', 'is_hidden': True})
+
+    is_like_movies_generally = fields.YesNoChoiceField(label='Вам понравились фильмы, которые вы смотрели в целом?')
+    liked_films = fields.MultipleChoiceField(label='Выберите, какие понравились', choices=WATCHED_FILMS)
+    disliked_films = fields.MultipleChoiceField(label='Выберите, какие не понравились', choices=WATCHED_FILMS)
+    help_in_signature_salad = fields.YesNoChoiceField(
+        label='Вам достаточно хорошо помогли в приготовлении вашего фирменного невероятного салата?')
+    enjoy_other_salads = fields.YesNoChoiceField(
+        label='Вам понравились салаты, которые была приготовлены на новый год?')
+    enjoyed_salads = fields.MultipleChoiceField(
+        label='Выберите какие салаты вам понравились', choices=SALADS)
+    is_enjoyed_date = fields.YesNoChoiceField(label='Вам понравилось ваше свидание?')
+    is_enjoyed_date_meal = fields.YesNoChoiceField(label='Вам понравилось блюдо, которое вы выбрали?')
+    is_enjoyed_date_selected_pizza = fields.YesNoChoiceField(label='Вам понравилась пицца, которую вам выбрали?')
+    is_enjoyed_waitress_smile = fields.YesNoChoiceField(
+        label='Вам понравилась официантка с красивой улыбкой (огромныни сиськами)?')
+    how_often_looked_at_her = fields.ChoiceFields(label='Как часто вы смотрели на неё?', choices=LOOK_AT_CHOICES)
+    how_ofter_looked_at_me_to_see_my_reaction = fields.ChoiceFields(
+        label='Как часто вы смотрели на меня пытаясь понять как часто я смотрю на неё?', choices=LOOK_AT_CHOICES)
+    massage_sessions = fields.YesNoChoiceField(label='Вам понравилось как прошли ваши сеансы массажа и йоги?')
+    massage_sessions_rate = fields.ChoiceFields(label='Оцените как сильно вам понравились ваши сеансы обновления?',
+                                                choices=MASSAGE_RATE_CHOICES)
+    were_mandarins_good = fields.YesNoChoiceField(label='Вкусные ли были мандарины?')
+    were_enough_mandarins = fields.YesNoChoiceField(label='Было ли достаточно мандаринов?')
+    were_walks_warm = forms.TypedChoiceField(label='Вам было тепло гулять в городе?')
+    were_games_good = fields.YesNoChoiceField(label='Вам понравились скачанные для вас игры?')
+    comment = fields.TextAreaField(label='Оставьте ваш комментарий по поводу нового года', max_length=4096)

@@ -5,4 +5,10 @@
 {% block content %}
     <h1>{{ form.title }}</h1>
     {% include 'base_form.html' with form=form %}
+</form>
+{% endblock %}
+
+{% block extrajs %}
+    {{ block.super }}
+    <script src="{% static 'js/polls/forms/after-new-year-poll-2022-2023.js' %}"></script>
 {% endblock %}

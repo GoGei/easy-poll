@@ -1,6 +1,6 @@
 $(document).ready(function () {
-    $('#id_trip').on('focusout', function () {
-        clearField($('#id_trip'));
+    $('#id_trip').on('focusout click', function () {
+        clearField($(this));
         let data = getJsonData(this);
 
         let trip = data['trip'];
@@ -16,7 +16,7 @@ $(document).ready(function () {
     });
 
     $('#id_greeted').on('focusout click', function () {
-        clearField($('#id_greeted'));
+        clearField($(this));
         let data = getJsonData(this);
 
         let greeted = data['greeted'];
@@ -28,8 +28,8 @@ $(document).ready(function () {
     });
 
     $('#id_go_to_walk_after_meet,#id_want_sleep').on('focusout click', function () {
-        clearField($('#id_go_to_walk_after_meet'));
-        clearField($('#id_want_sleep'));
+        clearField($(this));
+        clearField($(this));
         let data = getJsonData(this);
 
         let want_sleep = data['want_sleep'];
@@ -45,7 +45,7 @@ $(document).ready(function () {
 
 
     $('#id_is_coffee_good').on('focusout click', function () {
-        clearField($('#id_is_coffee_good'));
+        clearField($(this));
         let data = getJsonData(this);
 
         let is_coffee_good = data['is_coffee_good'];
@@ -58,8 +58,8 @@ $(document).ready(function () {
     });
 
     $('#id_is_fed_well,#is_coffee_good').on('focusout click', function () {
-        clearField($('#id_is_fed_well'));
-        clearField($('#is_coffee_good'));
+        clearField($(this));
+        clearField($(this));
         let data = getJsonData(this);
 
         let is_coffee_good = data['is_coffee_good'];
@@ -72,7 +72,7 @@ $(document).ready(function () {
     });
 
     $('#id_flowers').on('focusout click', function () {
-        clearField($('#id_flowers'));
+        clearField($(this));
         let data = getJsonData(this);
 
         let flowers = data['flowers'];
@@ -84,7 +84,7 @@ $(document).ready(function () {
     });
 
     $('#id_choose_shoes').on('focusout click', function () {
-        clearField($('#id_choose_shoes'));
+        clearField($(this));
         let data = getJsonData(this);
 
         let choose_shoes = data['choose_shoes'];
@@ -96,8 +96,8 @@ $(document).ready(function () {
     });
 
     $('#id_date_comment,#date_comment').on('focusout keyup', function () {
-        clearField($('#id_date_comment'));
-        clearField($('#date_comment'));
+        clearField($(this));
+        clearField($(this));
         let data = getJsonData(this);
 
         let was_date = data['was_date'];
@@ -110,7 +110,7 @@ $(document).ready(function () {
     });
 
     $('#id_gift_found').on('focusout click', function () {
-        clearField($('#id_gift_found'));
+        clearField($(this));
         let data = getJsonData(this);
 
         let gift_found = data['gift_found'];

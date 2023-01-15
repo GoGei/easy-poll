@@ -1,0 +1,4 @@
+- Game pall (Neighbour, Assassins 3)
+- Next trip preferences (general questions)
+- Film preferences (general questions)
+- Country trip preferences (general questions)

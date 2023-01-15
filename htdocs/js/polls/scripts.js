@@ -19,41 +19,10 @@ $.ajaxSetup({
     headers: {'X-CSRFToken': getCookie('csrftoken')},
 });
 
-function getJsonData(elem) {
-    $(elem).siblings('.custom-comment').remove();
-
-    let form = $(elem).closest('form');
-
-    return $(form)
-        .serializeArray()
-        .reduce(function (json, {name, value}) {
-            json[name] = value;
-            return json;
-        }, {});
-}
-
-function setComment(elem, txt) {
-    $('<div/>', {
-        'class': 'text-right text-info custom-comment',
-        'text': `${txt}`
-    }).insertAfter($(elem));
-}
-
-function clearComment(elem) {
-    $(elem).siblings('.custom-comment').remove();
-}
-
-function clearErrors(elem) {
-    let $divWithErrors = $(elem).closest('div.has-error');
-    $divWithErrors.find('div.error-message').remove();
-    $divWithErrors.removeClass('has-error');
-}
-
-function clearField(elem) {
-    clearComment($(elem));
-    clearErrors($(elem));
-}
-
 $('.form-control').on('focusin focusout', function () {
     clearErrors($(this));
+});
+
+$(document).ready(function() {
+    $('.select2').select2();
 });
