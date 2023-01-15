@@ -23,19 +23,19 @@ function getJsonData(elem) {
 
 
 function getElemContainer(elem) {
-    return $(elem).closest('div');
+    return $(elem).closest('div.form-group');
 }
 
 
-function setComment(elem, txt) {
+function setComment(elem, txt, style='text-info') {
     $('<div/>', {
-        'class': 'text-right text-info custom-comment',
+        'class': `text-right ${style} custom-comment`,
         'text': `${txt}`
     }).appendTo(getElemContainer(elem));
 }
 
 function clearComment(elem) {
-    getElemContainer(elem).siblings('.custom-comment').remove();
+    getElemContainer(elem).find('.custom-comment').remove();
 }
 
 function clearErrors(elem) {

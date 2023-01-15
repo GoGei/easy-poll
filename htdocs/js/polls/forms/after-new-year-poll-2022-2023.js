@@ -29,6 +29,17 @@ $(document).ready(function () {
         }
     });
 
+    $('#id_comment_on_treated').on('focusout click keyup', function () {
+        clearField($(this));
+        let data = getJsonData(this);
+
+        let comment_on_treated = data['comment_on_treated'];
+
+        if (comment_on_treated.length) {
+            setComment($(this), 'Жалуется, жалуется');
+        }
+    });
+
     $('#id_is_like_movies_generally').on('focusout click', function () {
         clearField($(this));
         let data = getJsonData(this);
@@ -46,7 +57,6 @@ $(document).ready(function () {
 
     $('#id_liked_films,#id_disliked_films').on('focusout click change', function () {
         let data = getJsonData(this);
-        console.log('data', data);
 
         let liked_films = toArray(data['liked_films']);
         let disliked_films = toArray(data['disliked_films']);
@@ -56,7 +66,14 @@ $(document).ready(function () {
         clearField($liked);
         clearField($disliked);
 
-        // TODO fix multiple add of the same comments
+        // in same categories film
+        if (liked_films && disliked_films) {
+            if (liked_films.some(n => disliked_films.some(h=> h===n))) {
+                setComment($(this),
+                    'Давай, добавь фильм и в нравится, и в не нравится. ИЛИ-ИЛИ',
+                    'text-danger');
+            }
+        }
 
         // liked films
         if (inArray('bruno', liked_films)) {
@@ -84,13 +101,6 @@ $(document).ready(function () {
         }
         if (inArray('how_i_met_your_mom', disliked_films)) {
             setComment($disliked, 'Тебе не понравился закадровый смех?');
-        }
-
-        // in same categories film
-        if (liked_films && disliked_films) {
-            if (liked_films.some(n => disliked_films.some(h=> h===n))) {
-                setComment($(this), 'Давай, добавь фильм и в нравится, и в не нравится. ИЛИ-ИЛИ');
-            }
         }
     });
 
@@ -124,9 +134,35 @@ $(document).ready(function () {
         clearField($(this));
         let data = getJsonData(this);
 
-        // TODO add comments to that
-        let enjoyed_salads = data['enjoyed_salads'];
-        console.log('enjoyed_salads', enjoyed_salads);
+        let enjoyed_salads = toArray(data['enjoyed_salads']);
+
+        if (!enjoyed_salads) {
+            return
+        }
+
+        if (inArray('olivie', enjoyed_salads)) {
+            setComment($(this), 'Самое интересное, что оливье мы съели последним');
+        } else {
+            setComment($(this), 'Интересно почему оливье главный салат, но его всегда оставляют на потом?');
+        }
+
+        if (inArray('green_salad', enjoyed_salads)) {
+            setComment($(this), 'Да, я бегал, искал эти ингредиенты и старался всё это сделать утром');
+        } else {
+            setComment($(this), 'Походу ты салат от меня больше не получишь');
+        }
+
+        if (inArray('mimosa', enjoyed_salads)) {
+            setComment($(this), 'Не зря фиячил всё это получается');
+        } else {
+            setComment($(this), 'Я что, зря фиячил?');
+        }
+
+        if (inArray('chicken_pineapple', enjoyed_salads)) {
+            setComment($(this), 'Ну кто бы сомневался (всем понравился)');
+        } else {
+            setComment($(this), 'Тю, странно как-то твой салат и самой не нравится. Осуждаю!');
+        }
     });
 
     $('#id_is_enjoyed_date').on('focusout click', function () {
@@ -189,12 +225,14 @@ $(document).ready(function () {
 
         if (!how_often_looked_at_her) {
             return
+        } else {
+            how_often_looked_at_her = parseInt(how_often_looked_at_her);
         }
 
-        if (how_often_looked_at_her > 4) {
+        if (how_often_looked_at_her <= 4) {
             setComment($(this), 'Я рад что наше свидание тебе дороже её улыбки');
-        } else if (how_often_looked_at_her <= 4) {
-            setComment($(this), 'Ты посмотри как тебя её улыбда тревожила');
+        } else if (how_often_looked_at_her > 4) {
+            setComment($(this), 'Ты посмотри как тебя её улыбка тревожила');
         }
     });
 
@@ -206,12 +244,16 @@ $(document).ready(function () {
 
         if (!how_ofter_looked_at_me_to_see_my_reaction) {
             return
+        } else {
+            how_ofter_looked_at_me_to_see_my_reaction = parseInt(how_ofter_looked_at_me_to_see_my_reaction);
         }
 
-        if (how_ofter_looked_at_me_to_see_my_reaction > 4) {
+        if (how_ofter_looked_at_me_to_see_my_reaction <= 2) {
             setComment($(this), 'Я рад, что ты во мне уверена');
-        } else if (how_ofter_looked_at_me_to_see_my_reaction <= 4) {
+        } else if (2 < how_ofter_looked_at_me_to_see_my_reaction && how_ofter_looked_at_me_to_see_my_reaction < 5) {
             setComment($(this), 'Ты посмотри какая ревнивая');
+        } else if (how_ofter_looked_at_me_to_see_my_reaction == 5) {
+            setComment($(this), 'Очень ревнивая');
         }
     });
 
@@ -221,7 +263,7 @@ $(document).ready(function () {
         let check_i_looked_at_her = data['how_ofter_looked_at_me_to_see_my_reaction'];
 
         if ((look_at_her && check_i_looked_at_her) &&
-            look_at_her <= 4 && check_i_looked_at_her <= 4) {
+            look_at_her > 4 && check_i_looked_at_her > 4) {
             setComment($(this), 'Какая глазастая! И сама смотрела, и за мной следила. Один глаз на нас, другой на Кавказ');
         }
     });
@@ -245,9 +287,18 @@ $(document).ready(function () {
 
         let massage_sessions_rate = data['massage_sessions_rate'];
 
-        if (massage_sessions_rate > 5) {
-            setComment($(this), 'Это мне ещё рости куда-то надо получается надо она мне хчет намекнуть');
-        } else if (massage_sessions_rate <= 5) {
+        if (!massage_sessions_rate) {
+            return
+        } else {
+            massage_sessions_rate = parseInt(massage_sessions_rate);
+        }
+
+        let massage_sessions = data['massage_sessions'];
+        if (massage_sessions === 'False' && massage_sessions_rate >= 3) {
+            setComment($(this), 'А как это тебе не нравится, но оно лучше чем "Нормально"?');
+        } else if (massage_sessions_rate < 5) {
+            setComment($(this), 'Это мне ещё рости куда-то надо получается надо она мне хочет намекнуть (но претензий не имею, главное чтоб нам нравилось)');
+        } else if (massage_sessions_rate == 5) {
             setComment($(this), 'Да, это наши сеансы обновления души и тела, ниже быть не может');
         }
     });
@@ -311,7 +362,7 @@ $(document).ready(function () {
         let comment = data['comment'];
 
         if (!comment.length) {
-            setComment($(this), 'Да оставь ты коммент блин');
+            setComment($(this), 'Да оставь ты коммент');
         }
     });
 });

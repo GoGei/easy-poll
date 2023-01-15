@@ -71,11 +71,9 @@ class AfterNewYearPoll_2022_2023_Form(forms.Form):
 
     is_enjoy_your_time = fields.YesNoChoiceField(label='Вам понравилось как вы провели время?')
     is_you_like_way_treated = fields.YesNoChoiceField(label='Вам понравилось как с вами обращались?')
-
     comment_on_treated = fields.TextAreaField(
         label='Оставьте ваш комментарий по поводу того, как с вами обращались', max_length=4096,
         attrs={'type': 'hidden', 'style': 'display: none;', 'is_hidden': True})
-
     is_like_movies_generally = fields.YesNoChoiceField(label='Вам понравились фильмы, которые вы смотрели в целом?')
     liked_films = fields.MultipleChoiceField(label='Выберите, какие понравились', choices=WATCHED_FILMS)
     disliked_films = fields.MultipleChoiceField(label='Выберите, какие не понравились', choices=WATCHED_FILMS)
@@ -98,6 +96,18 @@ class AfterNewYearPoll_2022_2023_Form(forms.Form):
                                                 choices=MASSAGE_RATE_CHOICES)
     were_mandarins_good = fields.YesNoChoiceField(label='Вкусные ли были мандарины?')
     were_enough_mandarins = fields.YesNoChoiceField(label='Было ли достаточно мандаринов?')
-    were_walks_warm = forms.TypedChoiceField(label='Вам было тепло гулять в городе?')
+    were_walks_warm = fields.YesNoChoiceField(label='Вам было тепло гулять в городе?')
     were_games_good = fields.YesNoChoiceField(label='Вам понравились скачанные для вас игры?')
     comment = fields.TextAreaField(label='Оставьте ваш комментарий по поводу нового года', max_length=4096)
+
+    def clean(self):
+        data = self.cleaned_data
+
+        liked_films = data.get('liked_films')
+        disliked_films = data.get('disliked_films')
+        if any(film in disliked_films for film in liked_films):
+            msg = 'Я же написал, нельзя указывать одинаковые фильмы и там и там!'
+            self.add_error('liked_films', msg)
+            self.add_error('disliked_films', msg)
+
+        return data
