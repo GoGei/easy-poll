@@ -31,12 +31,12 @@ def runserver():
 
 @task
 def deploy_local(branch=None):
-    branch = branch or 'main'
+    branch = branch or 'master'
 
     local('git checkout %s && git pull' % branch)
     local('pip3 install -r requirements.txt')
     local('./manage.py migrate')
-    local('./manage.py collectstatic --noinput')
+    # local('./manage.py collectstatic --noinput')
 
 
 @task
