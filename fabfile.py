@@ -33,7 +33,7 @@ def runserver():
 def deploy_local(branch=None):
     branch = branch or 'master'
 
-    local('git checkout %s && git pull' % branch)
+    local('git checkout %s && git pull origin %s' % (branch, branch))
     local('pip3 install -r requirements.txt')
     local('./manage.py migrate')
     # local('./manage.py collectstatic --noinput')
