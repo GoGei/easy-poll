@@ -1,6 +1,7 @@
 import django_filters
 from django import forms
 from django.db.models import Q
+from django.utils import timezone
 
 from core.ResponseCollector.models import ResponseCollector
 from . import fields
@@ -72,8 +73,7 @@ class AfterNewYearPoll_2022_2023_Form(forms.Form):
     is_enjoy_your_time = fields.YesNoChoiceField(label='Вам понравилось как вы провели время?')
     is_you_like_way_treated = fields.YesNoChoiceField(label='Вам понравилось как с вами обращались?')
     comment_on_treated = fields.TextAreaField(
-        label='Оставьте ваш комментарий по поводу того, как с вами обращались', max_length=4096,
-        attrs={'type': 'hidden', 'style': 'display: none;', 'is_hidden': True})
+        label='Оставьте ваш комментарий по поводу того, как с вами обращались', max_length=4096, hidden=True)
     is_like_movies_generally = fields.YesNoChoiceField(label='Вам понравились фильмы, которые вы смотрели в целом?')
     liked_films = fields.MultipleChoiceField(label='Выберите, какие понравились', choices=WATCHED_FILMS)
     disliked_films = fields.MultipleChoiceField(label='Выберите, какие не понравились', choices=WATCHED_FILMS)
@@ -109,5 +109,64 @@ class AfterNewYearPoll_2022_2023_Form(forms.Form):
             msg = 'Я же написал, нельзя указывать одинаковые фильмы и там и там!'
             self.add_error('liked_films', msg)
             self.add_error('disliked_films', msg)
+
+        return data
+
+
+class NextTripPreferences(forms.Form):
+    RATE_CHOICES = [
+        (None, 'Выберите пожалуйста'),
+        (1, 'Совсем не хочу'),
+        (2, 'Не хочу'),
+        (3, 'Средне'),
+        (4, 'Хочу'),
+        (5, 'Очень хочу')
+    ]
+
+    arrive_date = fields.DateField(label='Когда вы приезжаете?')
+    departure_date = fields.DateField(label='Когда вы уезжаете?')
+
+    already_bought_tickets = fields.YesNoChoiceField(label='Вы уже купили билет?')
+    new_dress_up = fields.YesNoChoiceField(label='Вы привезёте с собой новый "стил хиз лук"?')
+
+    walking_preference = fields.ChoiceFields(label='Оцените ваше желание гулять', choices=RATE_CHOICES)
+    walking_preference_comment = fields.TextAreaField(label='Оставьте ваш комментарий', max_length=1024,
+                                                      hidden=True)
+
+    watch_films_preference = fields.ChoiceFields(
+        label='Оцените ваше желание смотреть шедевры кинематографа и другой чуши?', choices=RATE_CHOICES)
+    watch_films_preference_comment = fields.TextAreaField(label='Оставьте ваш комментарий', max_length=1024,
+                                                          hidden=True)
+
+    just_stay_at_home = fields.ChoiceFields(label='Оцените ваше желание просто побыть дома', choices=RATE_CHOICES)
+    just_stay_at_home_comment = fields.TextAreaField(label='Оставьте ваш комментарий', max_length=1024,
+                                                     hidden=True)
+
+    want_to_try_smth_new = fields.ChoiceFields(label='Оцените ваше желание попробовать что-то новое',
+                                               choices=RATE_CHOICES)
+    want_to_try_smth_new_comment = fields.TextAreaField(label='Оставьте ваш комментарий', max_length=1024,
+                                                        hidden=True)
+
+    general_comment = fields.TextAreaField(label='Поле для общего комментария', max_length=4096)
+
+    def clean(self):
+        data = self.cleaned_data
+        today = timezone.now().date()
+
+        arrive_date = data.get('arrive_date')
+        departure_date = data.get('departure_date')
+
+        if arrive_date > departure_date:
+            msg = 'Да, давай, ПРИЕДЬ раньше, чем УЕДЬ'
+            self.add_error('arrive_date', msg)
+            self.add_error('departure_date', msg)
+
+        if arrive_date < today:
+            msg = 'Да, давай, ПРИЕДЬ в прошлом'
+            self.add_error('arrive_date', msg)
+
+        if departure_date < today:
+            msg = 'Да, давай, УЕДЬ в прошлом'
+            self.add_error('departure_date', msg)
 
         return data

@@ -88,3 +88,9 @@ def after_new_year_poll_2022_2023(request):
     form = forms.AfterNewYearPoll_2022_2023_Form
     template = 'Polls/polls/after_new_year_2022_2023_form.html'
     return __base_view(request, form=form, html_to_render=template)
+
+
+def next_meet_preference(request):
+    form = forms.NextTripPreferences
+    template = 'Polls/polls/next_trip_preference_form.html'
+    return __base_view(request, form=form, html_to_render=template)

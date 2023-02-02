@@ -15,7 +15,7 @@ class Command(BaseCommand):
     def handle(self, *args, **options):
         filepath = 'core/FormLinks/fixtures/form_links.json'
 
-        with open(filepath, 'r') as file:
+        with open(filepath, 'r', encoding='utf-8') as file:
             data = json.load(file)
 
         FormLinks.objects.all().update(wait_for_delete=True)

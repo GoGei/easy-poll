@@ -6,5 +6,9 @@
   {
     "label": "Пост новогодний опросник 2022-2023",
     "reverse": "after-new-year-poll-2022-2023"
+  },
+  {
+    "label": "Опросник следующей встречи",
+    "reverse": "next-meet-preference"
   }
 ]

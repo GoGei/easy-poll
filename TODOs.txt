@@ -2,3 +2,6 @@
 - Next trip preferences (general questions)
 - Film preferences (general questions)
 - Country trip preferences (general questions)
+
+- Create functions of handling of fields
+- Function to init form
