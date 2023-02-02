@@ -47,7 +47,7 @@ def response_view(request, response_id):
                    'json_data': json_data})
 
 
-def __base_view(request, form, html_to_render):
+def __base_view(request, form, html_to_render, form_data={}):
     """ General view to render and collect response """
     if '_cancel' in request.POST:
         return redirect(reverse('index'))
@@ -74,6 +74,7 @@ def __base_view(request, form, html_to_render):
         'body': form_body,
         'buttons': {'save': True, 'cancel': True},
     }
+    form.update(form_data)
 
     return render(request, html_to_render, {'form': form})
 
@@ -81,16 +82,25 @@ def __base_view(request, form, html_to_render):
 def new_year_poll_2022_2023(request):
     form = forms.NewYearPoll_2022_2023_Form
     template = 'Polls/polls/new_year_2022_2023_form.html'
-    return __base_view(request, form=form, html_to_render=template)
+    form_data = {
+        'id': 'id_new_year_2022_2023_form'
+    }
+    return __base_view(request, form=form, html_to_render=template, form_data=form_data)
 
 
 def after_new_year_poll_2022_2023(request):
     form = forms.AfterNewYearPoll_2022_2023_Form
     template = 'Polls/polls/after_new_year_2022_2023_form.html'
-    return __base_view(request, form=form, html_to_render=template)
+    form_data = {
+        'id': 'id_after_new_year_2022_2023_form'
+    }
+    return __base_view(request, form=form, html_to_render=template, form_data=form_data)
 
 
 def next_meet_preference(request):
     form = forms.NextTripPreferences
     template = 'Polls/polls/next_trip_preference_form.html'
-    return __base_view(request, form=form, html_to_render=template)
+    form_data = {
+        'id': 'id_next_trip_preference_form'
+    }
+    return __base_view(request, form=form, html_to_render=template, form_data=form_data)

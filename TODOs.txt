@@ -3,5 +3,7 @@
 - Film preferences (general questions)
 - Country trip preferences (general questions)
 
-- Create functions of handling of fields
-- Function to init form
+
+- Add function handlers to NY2022-2023 poll
+- Add date handlers to next meet preference
+- Add handle of comments to next meet preference

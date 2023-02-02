@@ -51,7 +51,7 @@ class AfterNewYearPoll_2022_2023_Form(forms.Form):
         ('olivie', 'Оливье'),
         ('green_salad', 'Салат из зелени'),
         ('mimosa', 'Мимоза'),
-        ('chicken_pineapple', 'Салат с курицей и ананасами и др. ингредиентами')
+        ('chicken_pineapple', 'Салат с курицей и ананасами и др. ингредиентами'),
     ]
     LOOK_AT_CHOICES = [
         (None, 'Выберите пожалуйста'),
@@ -103,8 +103,9 @@ class AfterNewYearPoll_2022_2023_Form(forms.Form):
     def clean(self):
         data = self.cleaned_data
 
-        liked_films = data.get('liked_films')
-        disliked_films = data.get('disliked_films')
+        liked_films = data.get('liked_films', [])
+        disliked_films = data.get('disliked_films', [])
+
         if any(film in disliked_films for film in liked_films):
             msg = 'Я же написал, нельзя указывать одинаковые фильмы и там и там!'
             self.add_error('liked_films', msg)
@@ -156,17 +157,18 @@ class NextTripPreferences(forms.Form):
         arrive_date = data.get('arrive_date')
         departure_date = data.get('departure_date')
 
-        if arrive_date > departure_date:
-            msg = 'Да, давай, ПРИЕДЬ раньше, чем УЕДЬ'
-            self.add_error('arrive_date', msg)
-            self.add_error('departure_date', msg)
+        if arrive_date and departure_date:
+            if arrive_date > departure_date:
+                msg = 'Да, давай, ПРИЕДЬ раньше, чем УЕДЬ'
+                self.add_error('arrive_date', msg)
+                self.add_error('departure_date', msg)
 
-        if arrive_date < today:
-            msg = 'Да, давай, ПРИЕДЬ в прошлом'
-            self.add_error('arrive_date', msg)
+            if arrive_date < today:
+                msg = 'Да, давай, ПРИЕДЬ в прошлом'
+                self.add_error('arrive_date', msg)
 
-        if departure_date < today:
-            msg = 'Да, давай, УЕДЬ в прошлом'
-            self.add_error('departure_date', msg)
+            if departure_date < today:
+                msg = 'Да, давай, УЕДЬ в прошлом'
+                self.add_error('departure_date', msg)
 
         return data

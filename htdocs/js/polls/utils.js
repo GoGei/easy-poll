@@ -46,7 +46,7 @@ function clearErrors(elem) {
 
 function clearField(elem) {
     clearComment($(elem));
-    clearErrors($(elem));
+    // clearErrors($(elem));
 }
 
 function showElem(elem) {
