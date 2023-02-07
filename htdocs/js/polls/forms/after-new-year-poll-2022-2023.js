@@ -185,25 +185,68 @@ $(document).ready(function () {
     }
 
     function howOfterLookedAtMeToSeeMyReaction() {
+        // let $field = $('#id_how_ofter_looked_at_me_to_see_my_reaction');
+        // clearField($field);
+        // let data = getJsonData($field);
+        //
+        // let how_ofter_looked_at_me_to_see_my_reaction = data['how_ofter_looked_at_me_to_see_my_reaction'] || $field.val();
+        //
+        // if (!how_ofter_looked_at_me_to_see_my_reaction) {
+        //     return
+        // } else {
+        //     how_ofter_looked_at_me_to_see_my_reaction = parseInt(how_ofter_looked_at_me_to_see_my_reaction);
+        // }
+        //
+        // if (how_ofter_looked_at_me_to_
+        // see_my_reaction <= 2) {
+        //     setComment($(this), 'Я рад, что ты во мне уверена');
+        // } else if (2 < how_ofter_looked_at_me_to_see_my_reaction && how_ofter_looked_at_me_to_see_my_reaction < 5) {
+        //     setComment($(this), 'Ты посмотри какая ревнивая');
+        // } else if (how_ofter_looked_at_me_to_see_my_reaction == 5) {
+        //     setComment($(this), 'Очень ревнивая');
+        // }
+        console.log('there');
+
         let $field = $('#id_how_ofter_looked_at_me_to_see_my_reaction');
-        clearField($field);
-        let data = getJsonData($field);
+        handleIntegerChoiceMultipleOneCondtion(
+            $field,
+            'id_how_ofter_looked_at_me_to_see_my_reaction',
+            [
+                {
+                    'condition': function (value) {
+                        return value <= 2;
+                    },
+                    'on_condition': function () {
+                        setComment($field, 'Я рад, что ты во мне уверена');
+                    },
+                },
+                {
+                    'condition': function (value) {
+                        return 2 < value && value < 5;
+                    },
+                    'on_condition': function () {
+                        setComment($field, 'Ты посмотри какая ревнивая');
+                    },
+                },
+                {
+                    'condition': function (value) {
+                        return value == 5;
+                    },
+                    'on_condition': function () {
+                        setComment($field, 'Очень ревнивая');
+                    },
+                },
 
-        let how_ofter_looked_at_me_to_see_my_reaction = data['how_ofter_looked_at_me_to_see_my_reaction'] || $field.val();
-
-        if (!how_ofter_looked_at_me_to_see_my_reaction) {
-            return
-        } else {
-            how_ofter_looked_at_me_to_see_my_reaction = parseInt(how_ofter_looked_at_me_to_see_my_reaction);
-        }
-
-        if (how_ofter_looked_at_me_to_see_my_reaction <= 2) {
-            setComment($(this), 'Я рад, что ты во мне уверена');
-        } else if (2 < how_ofter_looked_at_me_to_see_my_reaction && how_ofter_looked_at_me_to_see_my_reaction < 5) {
-            setComment($(this), 'Ты посмотри какая ревнивая');
-        } else if (how_ofter_looked_at_me_to_see_my_reaction == 5) {
-            setComment($(this), 'Очень ревнивая');
-        }
+                {
+                    'condition': function (value) {
+                        return value == 3;
+                    },
+                    'on_condition': function () {
+                        setComment($field, '3');
+                    },
+                },
+            ]
+        );
     }
 
     function howOftenBothHandler() {

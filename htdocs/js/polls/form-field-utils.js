@@ -103,3 +103,22 @@ function handleBoundYesNoChoice($current, $firstField, $secondField,
         setComment($current, different);
     }
 }
+
+function handleIntegerChoiceMultipleOneCondtion($field, form_field, conditions) {
+    let data = getJsonData($field);
+    let integer_choice = data[form_field] || $field.val();
+    clearField($field);
+
+    if (!integer_choice) {
+        return
+    } else {
+        integer_choice = parseInt(integer_choice);
+    }
+
+    $.each(conditions, item => {
+        if (item['condition'](integer_choice)) {
+            item['on_condition']();
+            return false;
+        }
+    });
+}
