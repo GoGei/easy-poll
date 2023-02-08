@@ -1,4 +1,46 @@
 $(document).ready(function () {
+    function arriveDate() {
+        handleDate(
+            $('#id_arrive_date'),
+            'arrive_date',
+            'Да, давай, укажи ПРОШЛОЕ',
+            'Ну буду тебя встречать получается',
+            'Жду тебя'
+        )
+    }
+
+    function departureDate() {
+        handleDate(
+            $('#id_departure_date'),
+            'departure_date',
+            'Типо ВЧЕРА уехала',
+            'Жалко что ты уезжаешь',
+            'Я буду по тебе скучать'
+        )
+    }
+
+    function arriveDepartureDate() {
+        let $arrive_date = $('#id_arrive_date');
+        let $departure_date = $('#id_departure_date');
+
+        let data = getJsonData($(this));
+        let arrive_date = data['arrive_date'] || $arrive_date.val();
+        let departure_date = data['departure_date'] || $departure_date.val();
+
+        if (!(arrive_date && departure_date)) {
+            return
+        }
+
+        arrive_date = new Date(arrive_date).toISOString().split('T')[0]
+        departure_date = new Date(departure_date).toISOString().split('T')[0]
+
+        if (arrive_date > departure_date) {
+            clearField($arrive_date);
+            clearField($departure_date);
+            setComment($(this), 'Давай, укажи что ты уехала раньше чем приехала!');
+        }
+    }
+
     function alreadyBotTickets() {
         handleYesNoChoice(
             $('#id_already_bought_tickets'),
@@ -18,46 +60,178 @@ $(document).ready(function () {
     }
 
     function walkingPreference() {
-        handleIntegerChoiceWithComment(
-            $('#id_walking_preference'),
-            $('#id_walking_preference_comment'),
+        let $field = $('#id_walking_preference');
+        let $comment = $('#id_walking_preference_comment');
+
+        hideElem($comment);
+
+        handleChoice(
+            $field,
             'walking_preference',
-            'Это хорошо, что ты хочешь гулять',
-            'Мы НЕ хотим гулять!',
-            4
+            parseInt,
+            [
+                {
+                    'condition': (value, data) => {
+                        return value < 3;
+                    },
+                    'callback': (value) => {
+                        setComment($field, 'Мы НЕ хотим гулять!');
+                        hideElem($comment);
+                    }
+                },
+                {
+                    'condition': (value, data) => {
+                        return value >= 3 && value <= 4;
+                    },
+                    'callback': (value) => {
+                        setComment($field, 'Это хорошо, что ты хочешь гулять. Обязательно сходим');
+                        showElem($comment);
+                    }
+                },
+                {
+                    'condition': (value, data) => {
+                        return value > 4;
+                    },
+                    'callback': (value) => {
+                        setComment($field, 'Как она хочет чтоб её выгуляли, тогда точно идём гулять');
+                        showElem($comment);
+                    }
+                },
+            ],
+            true,
+            true,
         );
     }
 
     function watchFilmsPreference() {
-        handleIntegerChoiceWithComment(
-            $('#id_watch_films_preference'),
-            $('#id_watch_films_preference_comment'),
+        let $field = $('#id_watch_films_preference');
+        let $comment = $('#id_watch_films_preference_comment');
+
+        hideElem($comment);
+
+        handleChoice(
+            $field,
             'watch_films_preference',
-            'Хорошо, я подберу что-то интересное )',
-            'Мы не будем смотреть кинематограф?',
-            4
+            parseInt,
+            [
+                {
+                    'condition': (value, data) => {
+                        return value < 3;
+                    },
+                    'callback': (value) => {
+                        setComment($field, 'Мы не будем смотреть кинематограф?');
+                        hideElem($comment);
+                    }
+                },
+                {
+                    'condition': (value, data) => {
+                        return value >= 3 && value <= 4;
+                    },
+                    'callback': (value) => {
+                        setComment($field, 'Хорошо, я подберу что-то интересное )');
+                        showElem($comment);
+                    }
+                },
+                {
+                    'condition': (value, data) => {
+                        return value > 4;
+                    },
+                    'callback': (value) => {
+                        setComment($field, 'Ну ты наверное очень хочешь посмотреть что-то');
+                        showElem($comment);
+                    }
+                },
+            ],
+            true,
+            true,
         );
     }
 
     function justStayAtHome() {
-        handleIntegerChoiceWithComment(
-            $('#id_just_stay_at_home'),
-            $('#id_just_stay_at_home_comment'),
+        let $field = $('#id_just_stay_at_home');
+        let $comment = $('#id_just_stay_at_home_comment');
+
+        hideElem($comment);
+
+        handleChoice(
+            $field,
             'just_stay_at_home',
-            'Будем отдыхать дома',
-            'Получается мы активничаем',
-            4
+            parseInt,
+            [
+                {
+                    'condition': (value, data) => {
+                        return value < 3;
+                    },
+                    'callback': (value) => {
+                        setComment($field, 'Ты по городу бегать собралась?');
+                        showElem($comment);
+                    }
+                },
+                {
+                    'condition': (value, data) => {
+                        return value >= 3 && value <= 4;
+                    },
+                    'callback': (value) => {
+                        setComment($field, 'Получается мы активничаем');
+                        showElem($comment);
+                    }
+                },
+                {
+                    'condition': (value, data) => {
+                        return value > 4;
+                    },
+                    'callback': (value) => {
+                        setComment($field, 'Будем отдыхать дома');
+                        hideElem($comment);
+                    }
+                },
+            ],
+            true,
+            true,
         );
     }
 
     function wantToTrySmthNew() {
-        handleIntegerChoiceWithComment(
-            $('#id_want_to_try_smth_new'),
-            $('#id_want_to_try_smth_new_comment'),
+        let $field = $('#id_want_to_try_smth_new');
+        let $comment = $('#id_want_to_try_smth_new_comment');
+
+        hideElem($comment);
+
+        handleChoice(
+            $field,
             'want_to_try_smth_new',
-            'Будем отдыхать дома',
-            'Получается мы активничаем',
-            4
+            parseInt,
+            [
+                {
+                    'condition': (value, data) => {
+                        return value < 3;
+                    },
+                    'callback': (value) => {
+                        setComment($field, 'Будем делать всё что отлажено получается');
+                        hideElem($comment);
+                    }
+                },
+                {
+                    'condition': (value, data) => {
+                        return value >= 3 && value <= 4;
+                    },
+                    'callback': (value) => {
+                        setComment($field, 'И что же ты решила новое попробовать?');
+                        showElem($comment);
+                    }
+                },
+                {
+                    'condition': (value, data) => {
+                        return value > 4;
+                    },
+                    'callback': (value) => {
+                        setComment($field, 'Я уже весь во внимании');
+                        showElem($comment);
+                    }
+                },
+            ],
+            true,
+            true,
         );
     }
 
@@ -65,10 +239,28 @@ $(document).ready(function () {
         handleComment(
             $('#id_general_comment'),
             'general_comment',
-            'Да оставь ты коммент')
-
+            'Да оставь ты коммент',
+            false,
+        )
     }
 
+    function init() {
+        arriveDate();
+        departureDate();
+        alreadyBotTickets();
+        newDressUp();
+        walkingPreference();
+        watchFilmsPreference();
+        justStayAtHome();
+        wantToTrySmthNew();
+        generalComment();
+    }
+
+    init();
+
+    $('#id_arrive_date').on('change', arriveDate);
+    $('#id_departure_date').on('change', departureDate);
+    $('#id_arrive_date,#id_departure_date').on('change', arriveDepartureDate);
     $('#id_already_bought_tickets').on('focusout click', alreadyBotTickets);
     $('#id_new_dress_up').on('focusout click', newDressUp);
     $('#id_walking_preference').on('focusout click', walkingPreference);

@@ -75,7 +75,7 @@ class AfterNewYearPoll_2022_2023_Form(forms.Form):
     comment_on_treated = fields.TextAreaField(
         label='Оставьте ваш комментарий по поводу того, как с вами обращались', max_length=4096, hidden=True)
     is_like_movies_generally = fields.YesNoChoiceField(label='Вам понравились фильмы, которые вы смотрели в целом?')
-    liked_films = fields.MultipleChoiceField(label='Выберите, какие понравились', choices=WATCHED_FILMS)
+    liked_films = fields.MultipleChoiceField(label='Выберите, какие понравились', choices=WATCHED_FILMS,)
     disliked_films = fields.MultipleChoiceField(label='Выберите, какие не понравились', choices=WATCHED_FILMS)
     help_in_signature_salad = fields.YesNoChoiceField(
         label='Вам достаточно хорошо помогли в приготовлении вашего фирменного невероятного салата?')

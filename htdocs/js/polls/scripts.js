@@ -23,6 +23,10 @@ $('.form-control').on('focusin focusout', function () {
     clearErrors($(this));
 });
 
+$('.select2').on('change select2:open', function () {
+    clearErrors($(this));
+});
+
 $(document).ready(function() {
     $('.select2').select2();
 });

@@ -11,8 +11,7 @@ class FormLinks(models.Model):
 
     @classmethod
     def get_by_url(cls, rev_url):
-        url = rev_url.replace('/', '')
-        return cls.objects.get(link__icontains=url)
+        return cls.objects.get(link__iexact=rev_url)
 
     def __str__(self):
         return f'{self.label}'

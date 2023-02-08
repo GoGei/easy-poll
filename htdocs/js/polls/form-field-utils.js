@@ -26,99 +26,67 @@ function handleYesNoChoiceWithComment($field, $comment, form_field, comment_on_f
     }
 }
 
-function handleComment($field, form_field, comment, on_length) {
+function handleComment($field, form_field, comment, if_has_text) {
     clearField($field);
     let data = getJsonData($field);
     let comment_data = data[form_field] || $field.val();
-
-    if (on_length && comment_data.length) {
+    if (if_has_text && comment_data.length) {
         setComment($field, comment);
-    } else if (!on_length && !comment_data.length) {
+    } else if (!if_has_text && !comment_data.length) {
         setComment($field, comment);
     }
 }
 
-function handleIntegerChoice($field, form_field, comment_on_less, comment_on_greater, bound) {
+function handleChoice($field, form_field, parser, conditions, trigger_first_condition = true,
+                      with_comment = false, $comment = null) {
     let data = getJsonData($field);
-    let integer_choice = data[form_field] || $field.val();
+    let choice = data[form_field] || $field.val();
     clearField($field);
 
-    if (!integer_choice) {
+    if (!choice) {
+        if ($comment) {
+            hideElem($comment);
+        }
+
         return
     } else {
-        integer_choice = parseInt(integer_choice);
+        choice = parser(choice);
     }
 
-    if (integer_choice >= bound) {
-        setComment($field, comment_on_less);
-    } else if (integer_choice < bound) {
-        setComment($field, comment_on_greater);
-    }
-}
+    $.each(conditions, (index, item) => {
+        if (item['condition'](choice, data)) {
+            if (item['callback']) {
+                item['callback'](choice);
+            } else {
+                showElem($comment);
+                setComment($field, item['comment']);
+            }
 
-function handleIntegerChoiceWithComment($field, $fieldComment, form_field, comment_on_less, comment_on_greater, bound) {
-    let data = getJsonData($field);
-
-    let integer_choice = data[form_field] || $field.val();
-
-    clearField($field);
-    clearField($fieldComment);
-
-    if (!integer_choice) {
-        return
-    } else {
-        integer_choice = parseInt(integer_choice);
-    }
-
-    if (integer_choice >= bound) {
-        setComment($field, comment_on_less);
-        showElem($fieldComment);
-    } else if (integer_choice < bound) {
-        setComment($field, comment_on_greater);
-        hideElem($fieldComment);
-    } else {
-        hideElem($fieldComment);
-    }
-}
-
-function handleBoundYesNoChoice($current, $firstField, $secondField,
-                                first_form_field, second_form_field,
-                                both_true, both_false, different) {
-    clearField($firstField);
-    clearField($secondField);
-    let data = getJsonData($current);
-
-    let first_form_field_data = data[first_form_field];
-    let second_form_field_data = data[second_form_field];
-
-    if (!first_form_field_data && !second_form_field_data) {
-        return;
-    }
-
-    if (first_form_field_data === 'True' && second_form_field_data === 'True') {
-        setComment($current, both_true);
-    } else if (first_form_field_data === 'False' && second_form_field_data === 'False') {
-        setComment($current, both_false);
-    } else {
-        setComment($current, different);
-    }
-}
-
-function handleIntegerChoiceMultipleOneCondtion($field, form_field, conditions) {
-    let data = getJsonData($field);
-    let integer_choice = data[form_field] || $field.val();
-    clearField($field);
-
-    if (!integer_choice) {
-        return
-    } else {
-        integer_choice = parseInt(integer_choice);
-    }
-
-    $.each(conditions, item => {
-        if (item['condition'](integer_choice)) {
-            item['on_condition']();
-            return false;
+            if (trigger_first_condition) {
+                return false;
+            }
         }
     });
+}
+
+function handleDate($field, form_field, on_past, on_today, on_future, on_long_future) {
+    let data = getJsonData($field);
+    let selected_date = data[form_field] || $field.val();
+    clearField($field);
+
+    if (!selected_date) {
+        return;
+    } else {
+        selected_date = new Date(selected_date).toISOString().split("T")[0];
+    }
+
+    let today = new Date().toISOString().split("T")[0];
+
+    if (selected_date < today) {
+        setComment($field, on_past);
+    } else if (selected_date > today) {
+        setComment($field, on_future);
+    } else {
+        setComment($field, on_today);
+    }
 }

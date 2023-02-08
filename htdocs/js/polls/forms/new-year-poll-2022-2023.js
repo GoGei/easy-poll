@@ -1,6 +1,7 @@
 $(document).ready(function () {
-    $('#id_trip').on('focusout click', function () {
-        clearField($(this));
+    function trip() {
+        let $field = $('#id_trip');
+        clearField($field);
         let data = getJsonData(this);
 
         let trip = data['trip'];
@@ -13,24 +14,21 @@ $(document).ready(function () {
         } else if (trip.length > 80) {
             setComment($(this), 'Нормально ты написала. Оставляй');
         }
-    });
+    }
 
-    $('#id_greeted').on('focusout click', function () {
-        clearField($(this));
-        let data = getJsonData(this);
+    function greeted() {
+        handleYesNoChoice(
+            $('#id_greeted'),
+            'greeted',
+            'Ты чё?! Сейчас билет назад куплю!',
+            'Конечно, я готовился!',
+        );
+    }
 
-        let greeted = data['greeted'];
-        if (greeted === 'False') {
-            setComment($(this), 'Ты чё?! Сейчас билет назад куплю!');
-        } else if (greeted === 'True') {
-            setComment($(this), 'Конечно, я готовился!');
-        }
-    });
-
-    $('#id_go_to_walk_after_meet,#id_want_sleep').on('focusout click', function () {
-        clearField($(this));
-        clearField($(this));
-        let data = getJsonData(this);
+    function goForWalkAndSleep() {
+        clearField($('#id_go_to_walk_after_meet'));
+        clearField($('#id_want_sleep'));
+        let data = getJsonData($(this));
 
         let want_sleep = data['want_sleep'];
         let go_to_walk_after_meet = data['go_to_walk_after_meet'];
@@ -38,67 +36,60 @@ $(document).ready(function () {
             setComment($(this), 'Ну и на кой чёрт надо было переться гулять?');
         } else if (want_sleep === 'True' && go_to_walk_after_meet === 'False') {
             setComment($(this), 'Это было правильное решение');
+        } else if (want_sleep === 'False' && go_to_walk_after_meet === 'True') {
+            setComment($(this), 'Интересно откуда в тебе было столько энергии');
         } else if (want_sleep === 'False' && go_to_walk_after_meet === 'False') {
             setComment($(this), 'Интересно почему не пошли гулять... Возможно были в маке?');
         }
-    });
+    }
 
+    function isCoffeeGood() {
+        handleYesNoChoice(
+            $('#id_is_coffee_good'),
+            'is_coffee_good',
+            'Ну кофе ладно - я старался',
+            'Мне приятно, я старался',
+        );
+    }
 
-    $('#id_is_coffee_good').on('focusout click', function () {
-        clearField($(this));
-        let data = getJsonData(this);
-
-        let is_coffee_good = data['is_coffee_good'];
-        if (is_coffee_good !== 'True') {
-            setComment($(this), 'Ну кофе ладно - я старался');
-        } else if (is_coffee_good === 'True') {
-            setComment($(this), 'Мне приятно, я старался');
-        }
-
-    });
-
-    $('#id_is_fed_well,#is_coffee_good').on('focusout click', function () {
-        clearField($(this));
-        clearField($(this));
-        let data = getJsonData(this);
+    function isFedWellAndCoffeeGood() {
+        clearField($('#id_is_fed_well'));
+        clearField($('#is_coffee_good'));
+        let data = getJsonData($(this));
 
         let is_coffee_good = data['is_coffee_good'];
         let is_fed_well = data['is_fed_well'];
-        if (is_coffee_good !== 'True' && is_fed_well !== 'True') {
+        if (is_coffee_good === 'False' && is_fed_well === 'False') {
             setComment($(this), 'Я прощу кофе, но вот неуважение еды - никогда!');
-        } else if (is_fed_well !== 'True') {
+        } else if (is_fed_well === 'False') {
             setComment($(this), 'А вот тут я выдаю бан! До свидания');
+        } else if (is_fed_well === 'True') {
+            setComment($(this), 'Отлично, мне нравится, что тебе нравится как я готовлю');
         }
-    });
+    }
 
-    $('#id_flowers').on('focusout click', function () {
-        clearField($(this));
-        let data = getJsonData(this);
+    function flowers() {
+        handleYesNoChoice(
+            $('#id_flowers'),
+            'flowers',
+            'Ещё бы ей не понравилось!',
+            'Я иду их выкидывать!',
+        );
+    }
 
-        let flowers = data['flowers'];
-        if (flowers === 'True') {
-            setComment($(this), 'Ещё бы ей не понравилось!');
-        } else if (flowers === 'False') {
-            setComment($(this), 'Я иду их выкидывать!');
-        }
-    });
+    function chooseShoes() {
+        handleYesNoChoice(
+            $('#id_choose_shoes'),
+            'choose_shoes',
+            'Продолжаем поиски',
+            'Надеюсь она комфортная',
+        );
+    }
 
-    $('#id_choose_shoes').on('focusout click', function () {
-        clearField($(this));
-        let data = getJsonData(this);
-
-        let choose_shoes = data['choose_shoes'];
-        if (choose_shoes === 'True') {
-            setComment($(this), 'Надеюсь она комфортная');
-        } else if (choose_shoes === 'False') {
-            setComment($(this), 'Продолжаем поиски');
-        }
-    });
-
-    $('#id_date_comment,#date_comment').on('focusout keyup', function () {
-        clearField($(this));
-        clearField($(this));
-        let data = getJsonData(this);
+    function wasDateAndComment() {
+        clearField($('#id_was_date'));
+        clearField($('#id_date_comment'));
+        let data = getJsonData($(this));
 
         let was_date = data['was_date'];
         let date_comment = data['date_comment'];
@@ -107,11 +98,12 @@ $(document).ready(function () {
         } else if (was_date === 'True' && !date_comment.length) {
             setComment($(this), 'Если свидание было, то оставь ты комментарий!');
         }
-    });
+    }
 
-    $('#id_gift_found').on('focusout click', function () {
-        clearField($(this));
-        let data = getJsonData(this);
+    function giftFound() {
+        let $field = $('#id_gift_found');
+        clearField($field);
+        let data = getJsonData($field);
 
         let gift_found = data['gift_found'];
         let now = new Date();
@@ -119,15 +111,38 @@ $(document).ready(function () {
 
         if (gift_found) {
             if (gift_found === 'True' && (now < target)) {
-                setComment($(this), 'Да ладно! Как ты его нашла?');
+                setComment($field, 'Да ладно! Как ты его нашла?');
             } else if (gift_found === 'True' && (now >= target)) {
-                setComment($(this), 'Я надеюсь тебе понравилось');
+                setComment($field, 'Я надеюсь тебе понравилось');
             } else if (now < target) {
-                setComment($(this), 'Конечно, жди 1ого января!');
+                setComment($field, 'Конечно, жди 1ого января!');
             } else if (now >= target) {
-                setComment($(this), 'Уже 1ое января! Можно спросить за свой подарок');
+                setComment($field, 'Уже 1ое января прошло! Можно спросить за свой подарок');
             }
         }
+    }
 
-    });
+    function init() {
+        trip();
+        greeted();
+        goForWalkAndSleep();
+        isCoffeeGood();
+        isFedWellAndCoffeeGood();
+        flowers();
+        chooseShoes();
+        wasDateAndComment();
+        giftFound();
+    }
+
+    init();
+
+    $('#id_trip').on('focusout click', trip);
+    $('#id_greeted').on('focusout click', greeted);
+    $('#id_go_to_walk_after_meet,#id_want_sleep').on('focusout click', goForWalkAndSleep);
+    $('#id_is_coffee_good').on('focusout click', isCoffeeGood);
+    $('#id_is_fed_well,#is_coffee_good').on('focusout click', isFedWellAndCoffeeGood);
+    $('#id_flowers').on('focusout click', flowers);
+    $('#id_choose_shoes').on('focusout click', chooseShoes);
+    $('#id_was_date,#id_date_comment').on('focusout keyup', wasDateAndComment);
+    $('#id_gift_found').on('focusout click', giftFound);
 });

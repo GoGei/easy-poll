@@ -1,9 +1,4 @@
 - Game pall (Neighbour, Assassins 3)
-- Next trip preferences (general questions)
 - Film preferences (general questions)
 - Country trip preferences (general questions)
-
-
-- Add function handlers to NY2022-2023 poll
-- Add date handlers to next meet preference
-- Add handle of comments to next meet preference
+- 14 feb pall

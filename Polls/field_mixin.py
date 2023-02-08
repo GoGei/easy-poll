@@ -9,14 +9,14 @@ YES_NO_CHOICES = [
 
 
 class BaseFieldMixin(object):
-    @staticmethod
     def update_kwargs(self, **kwargs):
-        raise NotImplementedError('Please, overwrite mixin rules of kwargs update')
+        kwargs.update({'error_messages': ERROR_MESSAGES})
+        return kwargs
 
 
 class HiddenFieldMixin(BaseFieldMixin):
-    @staticmethod
     def update_kwargs(self, **kwargs):
+        kwargs = super(HiddenFieldMixin, self).update_kwargs(**kwargs)
         self.hidden = kwargs.pop('hidden', False)
         self.hidden_attrs = {'type': 'hidden', 'style': 'display: none;', 'is_hidden': True}
         self.attrs = kwargs.get('attrs')

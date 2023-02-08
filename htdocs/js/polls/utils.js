@@ -59,6 +59,7 @@ function hideElem(elem) {
     let $elem = $(elem);
     $elem.closest('div.form-group').addClass('d-none');
     $elem.hide();
+    $elem.val("");
 }
 
 function toArray(data) {

@@ -77,7 +77,7 @@ $(document).ready(function () {
             setComment($disliked, 'Уэнсдэй: А мне понравился, хотя просмотр других женщин любого контекста МЫ осуждаем');
         }
         if (inArray('my_boyfriend_from_zoo', disliked_films)) {
-            setComment($disliked, 'Мой парень из зоопарка: Спасибо, теперь мне придётся ещё профессионально с сутулыми общаться');
+            setComment($disliked, 'Мой парень из зоопарка: Спасибо, теперь мне не придётся профессионально общаться с сутулыми');
         }
         if (inArray('how_i_met_your_mom', disliked_films)) {
             setComment($disliked, 'Как я встретил вашу маму: Тебе не понравился закадровый смех?');
@@ -175,76 +175,51 @@ $(document).ready(function () {
     }
 
     function howOftenLookedAtHer() {
-        handleIntegerChoice(
+        handleChoice(
             $('#id_how_often_looked_at_her'),
             'how_often_looked_at_her',
-            'Ты посмотри как тебя её улыбка тревожила',
-            'Я рад что наше свидание тебе дороже её улыбки',
-            4
+            parseInt,
+            [
+                {
+                    'condition': (value, data) => {
+                        return value < 4;
+                    },
+                    'comment': 'Я рад что наше свидание тебе дороже её улыбки',
+                },
+                {
+                    'condition': (value, data) => {
+                        return value >= 4;
+                    },
+                    'comment': 'Ты посмотри как тебя её улыбка тревожила',
+                },
+            ]
         )
     }
 
     function howOfterLookedAtMeToSeeMyReaction() {
-        // let $field = $('#id_how_ofter_looked_at_me_to_see_my_reaction');
-        // clearField($field);
-        // let data = getJsonData($field);
-        //
-        // let how_ofter_looked_at_me_to_see_my_reaction = data['how_ofter_looked_at_me_to_see_my_reaction'] || $field.val();
-        //
-        // if (!how_ofter_looked_at_me_to_see_my_reaction) {
-        //     return
-        // } else {
-        //     how_ofter_looked_at_me_to_see_my_reaction = parseInt(how_ofter_looked_at_me_to_see_my_reaction);
-        // }
-        //
-        // if (how_ofter_looked_at_me_to_
-        // see_my_reaction <= 2) {
-        //     setComment($(this), 'Я рад, что ты во мне уверена');
-        // } else if (2 < how_ofter_looked_at_me_to_see_my_reaction && how_ofter_looked_at_me_to_see_my_reaction < 5) {
-        //     setComment($(this), 'Ты посмотри какая ревнивая');
-        // } else if (how_ofter_looked_at_me_to_see_my_reaction == 5) {
-        //     setComment($(this), 'Очень ревнивая');
-        // }
-        console.log('there');
-
-        let $field = $('#id_how_ofter_looked_at_me_to_see_my_reaction');
-        handleIntegerChoiceMultipleOneCondtion(
-            $field,
+        handleChoice(
+            $('#id_how_ofter_looked_at_me_to_see_my_reaction'),
             'id_how_ofter_looked_at_me_to_see_my_reaction',
+            parseInt,
             [
                 {
-                    'condition': function (value) {
+                    'condition': (value, data) => {
                         return value <= 2;
                     },
-                    'on_condition': function () {
-                        setComment($field, 'Я рад, что ты во мне уверена');
-                    },
+                    'comment': 'Я рад, что ты во мне уверена',
                 },
                 {
-                    'condition': function (value) {
+                    'condition': (value, data) => {
                         return 2 < value && value < 5;
                     },
-                    'on_condition': function () {
-                        setComment($field, 'Ты посмотри какая ревнивая');
-                    },
+                    'comment': 'Ты посмотри какая ревнивая',
                 },
                 {
-                    'condition': function (value) {
+                    'condition': (value, data) => {
                         return value == 5;
                     },
-                    'on_condition': function () {
-                        setComment($field, 'Очень ревнивая');
-                    },
-                },
-
-                {
-                    'condition': function (value) {
-                        return value == 3;
-                    },
-                    'on_condition': function () {
-                        setComment($field, '3');
-                    },
-                },
+                    'comment': 'Очень ревнивая',
+                }
             ]
         );
     }
@@ -272,26 +247,32 @@ $(document).ready(function () {
     }
 
     function massageSessionRate() {
-        let $field = $('#id_massage_sessions_rate');
-        clearField($field);
-        let data = getJsonData($field);
+        handleChoice(
+            $('#id_massage_sessions_rate'),
+            'massage_sessions_rate',
+            parseInt,
+            [
+                {
+                    'condition': (value, data) => {
+                        let massage_sessions = data['massage_sessions'];
+                        return massage_sessions === 'False' && value >= 3;
+                    },
+                    'comment': 'А как это тебе не нравится, но оно лучше чем "Нормально"?',
+                },
+                {
+                    'condition': (value, data) => {
+                        return value < 5;
+                    },
+                    'comment': 'Это мне ещё расти куда-то надо получается надо она мне хочет намекнуть (но претензий не имею, главное чтоб нам нравилось)',
+                }, {
+                'condition': (value, data) => {
+                    return value == 5;
+                },
+                'comment': 'Да, это наши сеансы обновления души и тела, ниже быть не может',
+            },
 
-        let massage_sessions_rate = data['massage_sessions_rate'] || $field.val();
-
-        if (!massage_sessions_rate) {
-            return
-        } else {
-            massage_sessions_rate = parseInt(massage_sessions_rate);
-        }
-
-        let massage_sessions = data['massage_sessions'];
-        if (massage_sessions === 'False' && massage_sessions_rate >= 3) {
-            setComment($(this), 'А как это тебе не нравится, но оно лучше чем "Нормально"?');
-        } else if (massage_sessions_rate < 5) {
-            setComment($(this), 'Это мне ещё расти куда-то надо получается надо она мне хочет намекнуть (но претензий не имею, главное чтоб нам нравилось)');
-        } else if (massage_sessions_rate == 5) {
-            setComment($(this), 'Да, это наши сеансы обновления души и тела, ниже быть не может');
-        }
+            ]
+        );
     }
 
     function wereMandarinsGood() {
@@ -334,7 +315,8 @@ $(document).ready(function () {
         handleComment(
             $('#id_comment'),
             'comment',
-            'Да оставь ты коммент'
+            'Да оставь ты коммент',
+            false
         )
     }
 
@@ -387,4 +369,5 @@ $(document).ready(function () {
     $('#id_were_walks_warm').on('focusout click', wereWalksWarm);
     $('#id_were_games_good').on('focusout click', wereGamesGood);
     $('#id_comment').on('focusout click keyup', comment);
-});
+})
+;
