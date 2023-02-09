@@ -104,3 +104,21 @@ def next_meet_preference(request):
         'id': 'id_next_trip_preference_form'
     }
     return __base_view(request, form=form, html_to_render=template, form_data=form_data)
+
+
+def assassins_creed_3_game_pall(request):
+    form = forms.AssassinsCreed3
+    template = 'Polls/polls/assassins_creed_3_game_form.html'
+    form_data = {
+        'id': 'id_assassins_creed_3_game_form'
+    }
+    return __base_view(request, form=form, html_to_render=template, form_data=form_data)
+
+
+def hell_neighbour_game_pall(request):
+    form = forms.HellNeighbour
+    template = 'Polls/polls/hell_neighbour_game_form.html'
+    form_data = {
+        'id': 'id_hell_neighbour_game_form'
+    }
+    return __base_view(request, form=form, html_to_render=template, form_data=form_data)

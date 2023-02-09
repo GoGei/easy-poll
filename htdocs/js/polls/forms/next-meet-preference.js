@@ -23,7 +23,7 @@ $(document).ready(function () {
         let $arrive_date = $('#id_arrive_date');
         let $departure_date = $('#id_departure_date');
 
-        let data = getJsonData($(this));
+        let data = getJsonData();
         let arrive_date = data['arrive_date'] || $arrive_date.val();
         let departure_date = data['departure_date'] || $departure_date.val();
 
@@ -37,7 +37,7 @@ $(document).ready(function () {
         if (arrive_date > departure_date) {
             clearField($arrive_date);
             clearField($departure_date);
-            setComment($(this), 'Давай, укажи что ты уехала раньше чем приехала!');
+            setComment(getThisElem($(this), $departure_date), 'Давай, укажи что ты уехала раньше чем приехала!');
         }
     }
 
@@ -239,8 +239,6 @@ $(document).ready(function () {
         handleComment(
             $('#id_general_comment'),
             'general_comment',
-            'Да оставь ты коммент',
-            false,
         )
     }
 

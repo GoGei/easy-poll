@@ -1,7 +1,5 @@
-function getJsonData(elem) {
-    $(elem).siblings('.custom-comment').remove();
-
-    let form = $(elem).closest('form');
+function getJsonData() {
+    let form = $('form');
     return $(form)
         .serializeArray()
         .reduce(function (json, {name, value}) {
@@ -27,7 +25,7 @@ function getElemContainer(elem) {
 }
 
 
-function setComment(elem, txt, style='text-info') {
+function setComment(elem, txt, style = 'text-info') {
     $('<div/>', {
         'class': `text-right ${style} custom-comment`,
         'text': `${txt}`
@@ -75,4 +73,11 @@ function inArray(item, data) {
     }
     data = toArray(data);
     return data.indexOf(item) !== -1
+}
+
+function getThisElem($elem, $default) {
+    if ($.isWindow($elem[0])) {
+        return $($default);
+    }
+    return $elem
 }

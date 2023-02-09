@@ -10,5 +10,13 @@
   {
     "label": "Опросник следующей встречи",
     "reverse": "next-meet-preference"
+  },
+  {
+    "label": "Опросник \"Assassins creed 3\"",
+    "reverse": "assassins-creed-3-game-pall"
+  },
+  {
+    "label": "Опросник \"Как достать соседа\"",
+    "reverse": "hell-neighbour-game-pall"
   }
 ]

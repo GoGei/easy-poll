@@ -5,6 +5,7 @@ from django.utils import timezone
 
 from core.ResponseCollector.models import ResponseCollector
 from . import fields
+from . import base_forms
 
 
 class ResponseFilterForm(django_filters.FilterSet):
@@ -172,3 +173,11 @@ class NextTripPreferences(forms.Form):
                 self.add_error('departure_date', msg)
 
         return data
+
+
+class AssassinsCreed3(base_forms.BaseGamePall):
+    GAME_NAME = 'Assassins creed 3'
+
+
+class HellNeighbour(base_forms.BaseGamePall):
+    GAME_NAME = 'Как достать соседа'

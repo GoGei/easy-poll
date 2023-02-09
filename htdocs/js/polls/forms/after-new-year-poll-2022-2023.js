@@ -9,12 +9,12 @@ $(document).ready(function () {
     }
 
     function isYouLikeWayTreated() {
-        handleYesNoChoiceWithComment(
+        handleYesNoChoice(
             $('#id_is_you_like_way_treated'),
-            $('#id_comment_on_treated'),
             'is_you_like_way_treated',
             'Давай, нажалуйся )',
             'То тебе повезло',
+            $('#id_comment_on_treated'),
         )
     }
 
@@ -23,7 +23,7 @@ $(document).ready(function () {
             $('#id_comment_on_treated'),
             'comment_on_treated',
             'Жалуется, жалуется',
-            true
+            null
         )
     }
 
@@ -42,14 +42,14 @@ $(document).ready(function () {
         clearField($liked);
         clearField($disliked);
 
-        let data = getJsonData($liked);
+        let data = getJsonData();
         let liked_films = toArray(data['liked_films']);
         let disliked_films = toArray(data['disliked_films']);
 
         // in same categories film
         if (liked_films && disliked_films) {
             if (liked_films.some(n => disliked_films.some(h => h === n))) {
-                setComment($(this),
+                setComment(getThisElem($(this)),
                     'Давай, добавь фильм и в нравится, и в не нравится. ИЛИ-ИЛИ',
                     'text-danger');
             }
@@ -105,7 +105,7 @@ $(document).ready(function () {
     function enjoyedOtherSalads() {
         let $field = $('#id_enjoyed_salads');
         clearField($field);
-        let data = getJsonData($field);
+        let data = getJsonData();
         let enjoyed_salads = toArray(data['enjoyed_salads'] || $field.val());
 
         if (!enjoyed_salads || !enjoyed_salads.length) {
@@ -227,13 +227,13 @@ $(document).ready(function () {
     function howOftenBothHandler() {
         let $fieldLookAtHer = $('#id_how_often_looked_at_her');
         let $fieldLookAtMe = $('#id_how_ofter_looked_at_me_to_see_my_reaction');
-        let data = getJsonData($fieldLookAtHer);
+        let data = getJsonData();
         let look_at_her = data['how_often_looked_at_her'] || $fieldLookAtHer.val();
         let check_i_looked_at_her = data['how_ofter_looked_at_me_to_see_my_reaction'] || $fieldLookAtMe.val();
 
         if ((look_at_her && check_i_looked_at_her) &&
             look_at_her >= 4 && check_i_looked_at_her >= 4) {
-            setComment($(this), 'Какая глазастая! И сама смотрела, и за мной следила. Один глаз на нас, другой на Кавказ');
+            setComment(getThisElem($(this), $fieldLookAtMe), 'Какая глазастая! И сама смотрела, и за мной следила. Один глаз на нас, другой на Кавказ');
         }
     }
 
@@ -315,8 +315,6 @@ $(document).ready(function () {
         handleComment(
             $('#id_comment'),
             'comment',
-            'Да оставь ты коммент',
-            false
         )
     }
 

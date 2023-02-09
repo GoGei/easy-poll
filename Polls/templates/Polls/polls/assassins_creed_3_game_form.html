@@ -1,0 +1,14 @@
+{% extends 'Polls/polls_base.html' %}
+
+{% load static %}
+
+{% block content %}
+    <h1>{{ form.title }}</h1>
+    {% include 'base_form.html' with form=form %}
+</form>
+{% endblock %}
+
+{% block extrajs %}
+    {{ block.super }}
+    <script src="{% static 'js/polls/forms/assassins-creed-3-poll.js' %}"></script>
+{% endblock %}
