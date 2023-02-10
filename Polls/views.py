@@ -9,7 +9,7 @@ from .tables import ResponseTable
 
 
 def home_index(request):
-    forms_links = FormLinks.objects.filter(wait_for_delete=False).order_by('-label')
+    forms_links = FormLinks.objects.filter(wait_for_delete=False).order_by('label')
     return render(request, 'Polls/index.html', {'forms_links': forms_links})
 
 
