@@ -28,5 +28,7 @@ $('.select2').on('change select2:open', function () {
 });
 
 $(document).ready(function() {
-    $('.select2').select2();
+    $('.select2').select2({
+        placeholder: 'Выбери что-то'
+    });
 });
