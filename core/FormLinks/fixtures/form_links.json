@@ -18,5 +18,9 @@
   {
     "label": "Опросник \"Как достать соседа\"",
     "reverse": "hell-neighbour-game-pall"
+  },
+  {
+    "label": "14 февраля (День Святого Валентина) 2023",
+    "reverse": "saint-valentine-day-2023-pall"
   }
 ]

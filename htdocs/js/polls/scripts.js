@@ -27,8 +27,9 @@ $('.select2').on('change select2:open', function () {
     clearErrors($(this));
 });
 
-$(document).ready(function() {
-    $('.select2').select2({
-        placeholder: 'Выбери что-то'
+$(document).ready(function () {
+    // try to parse JSON string of select2 settings of field in there any
+    $('.select2').each(function () {
+        initSelect2($(this));
     });
 });

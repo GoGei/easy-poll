@@ -76,7 +76,7 @@ class AfterNewYearPoll_2022_2023_Form(forms.Form):
     comment_on_treated = fields.TextAreaField(
         label='Оставьте ваш комментарий по поводу того, как с вами обращались', max_length=4096, hidden=True)
     is_like_movies_generally = fields.YesNoChoiceField(label='Вам понравились фильмы, которые вы смотрели в целом?')
-    liked_films = fields.MultipleChoiceField(label='Выберите, какие понравились', choices=WATCHED_FILMS,)
+    liked_films = fields.MultipleChoiceField(label='Выберите, какие понравились', choices=WATCHED_FILMS)
     disliked_films = fields.MultipleChoiceField(label='Выберите, какие не понравились', choices=WATCHED_FILMS)
     help_in_signature_salad = fields.YesNoChoiceField(
         label='Вам достаточно хорошо помогли в приготовлении вашего фирменного невероятного салата?')
@@ -115,7 +115,7 @@ class AfterNewYearPoll_2022_2023_Form(forms.Form):
         return data
 
 
-class NextTripPreferences(forms.Form):
+class NextTripPreferencesForm(forms.Form):
     RATE_CHOICES = [
         (None, 'Выберите пожалуйста'),
         (1, 'Совсем не хочу'),
@@ -175,9 +175,82 @@ class NextTripPreferences(forms.Form):
         return data
 
 
-class AssassinsCreed3(base_forms.BaseGamePall):
+class AssassinsCreed3Form(base_forms.BaseGameForm):
     GAME_NAME = 'Assassins creed 3'
 
 
-class HellNeighbour(base_forms.BaseGamePall):
+class HellNeighbourForm(base_forms.BaseGameForm):
     GAME_NAME = 'Как достать соседа'
+
+
+class SaintValentineDay2023Form(forms.Form):
+    ACTIVITIES = [
+        ('watch_films', 'Смотреть фильмы'),
+        ('walking', 'Гулять'),
+        ('yoga', 'Йога'),
+        ('play_games', 'Играть в игры'),
+        ('go_to_date', 'Пойти на свидание'),
+        ('cooking', 'Готовить'),
+        ('travelling', 'Путешествовать'),
+        ('lay_at_home', 'Валяться дома'),
+        ('other_activities', 'Заниматься другими делами'),
+    ]
+
+    have_couple = fields.YesNoChoiceField(label='У вас есть пара на 14 февраля?')
+
+    # on yes
+    will_meet_each_other = fields.YesNoChoiceField(label='Вы встретитесь со своей парой?',
+                                                   hidden=True)
+    activities = fields.MultipleChoiceFieldWithCustomInput(label='Чем бы вы хотели заняться в этот день?',
+                                                           choices=ACTIVITIES,
+                                                           hidden=True,
+                                                           )
+    present_preferences = fields.TextField(label='Какой подарок вы бы хотели?',
+                                           hidden=True)
+
+    want_to_guess_your_present = fields.YesNoChoiceField(label='Хотели бы угадать свой подарок?',
+                                                         hidden=True)
+    your_guess = fields.TextField(label='Ваше предположение', hidden=True,
+                                  attrs={'placeholder': 'Пробуйте угадать'})
+    want_to_see_right_answer = fields.YesNoChoiceField(label='Показать правильный ответ?', hidden=True)
+    right_answer = fields.TextField(label='Ваш подарок это:', hidden=True,
+                                    attrs={
+                                        'placeholder': 'Ага, так я тебе его и написал! Жди свой подарок )',
+                                        'readonly': 'readonly'
+                                    })
+
+    # on no
+    comment_on_dont_have_couple = fields.TextAreaField(label='Ваш комментарий', max_length=4096,
+                                                       hidden=True,
+                                                       attrs={'placeholder': 'А теперь я требую объяснений',
+                                                              'cols': '40', 'rows': '5'})
+
+    def clean(self):
+        data = self.cleaned_data
+        have_couple = data.get('have_couple', None)
+        want_to_guess_your_present = data.get('want_to_guess_your_present', None)
+        your_guess = data.get('your_guess', '')
+
+        if have_couple is True:
+            msg = 'Если ты думаешь, что ты выбрала "Да" и всё решила пропустить и оно проканает - ты ошибаешься'
+
+            _fields = ('activities',)
+            for field in _fields:
+                if not data.get(field, None):
+                    self.add_error(field, msg)
+
+            _fields = ('will_meet_each_other',)
+            for field in _fields:
+                if data.get(field, None) is None:
+                    self.add_error(field, msg)
+        elif have_couple is False:
+            _fields = ('comment_on_dont_have_couple',)
+            msg = 'Тут вообще отвертеться не получится. Пиши давай'
+            for field in _fields:
+                if not data.get(field, None):
+                    self.add_error(field, msg)
+
+        if want_to_guess_your_present and not len(your_guess):
+            self.add_error('your_guess', 'вот сама же выбрала, что хочешь угадать, но ниче не написала')
+
+        return data

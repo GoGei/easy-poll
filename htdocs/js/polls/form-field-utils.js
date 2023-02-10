@@ -23,8 +23,8 @@ function handleYesNoChoice($field, form_field, comment_on_false, comment_on_true
 }
 
 function handleComment($field, form_field,
-                       comment_on_has_text='Благодарю вас за комментарий',
-                       comment_on_not_has_text='Оставьте пожалуйста комментарий') {
+                       comment_on_has_text = 'Благодарю вас за комментарий',
+                       comment_on_not_has_text = 'Оставьте пожалуйста комментарий') {
     clearField($field);
     let data = getJsonData();
     let comment_data = data[form_field] || $field.val();
@@ -108,6 +108,10 @@ function handleMultipleChoice($field, form_field, conditions, on_empty = null) {
     }
 
     $.each(selected, (index, choice) => {
+        if (!conditions[choice]) {
+            return true;
+        }
+
         let on_selected = conditions[choice]['on_selected'];
         let on_not_selected = conditions[choice]['on_not_selected'];
         let is_selected = inArray(choice, selected);

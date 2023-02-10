@@ -47,12 +47,15 @@ def response_view(request, response_id):
                    'json_data': json_data})
 
 
-def __base_view(request, form, html_to_render, form_data={}):
+def __base_view(request, form, html_to_render, form_data=dict):
     """ General view to render and collect response """
     if '_cancel' in request.POST:
         return redirect(reverse('index'))
 
     url = request.path
+
+    if not form_data:
+        form_data = {}
 
     form_body = form(request.POST or None)
     if form_body.is_valid():
@@ -98,7 +101,7 @@ def after_new_year_poll_2022_2023(request):
 
 
 def next_meet_preference(request):
-    form = forms.NextTripPreferences
+    form = forms.NextTripPreferencesForm
     template = 'Polls/polls/next_trip_preference_form.html'
     form_data = {
         'id': 'id_next_trip_preference_form'
@@ -107,7 +110,7 @@ def next_meet_preference(request):
 
 
 def assassins_creed_3_game_pall(request):
-    form = forms.AssassinsCreed3
+    form = forms.AssassinsCreed3Form
     template = 'Polls/polls/assassins_creed_3_game_form.html'
     form_data = {
         'id': 'id_assassins_creed_3_game_form'
@@ -116,9 +119,18 @@ def assassins_creed_3_game_pall(request):
 
 
 def hell_neighbour_game_pall(request):
-    form = forms.HellNeighbour
+    form = forms.HellNeighbourForm
     template = 'Polls/polls/hell_neighbour_game_form.html'
     form_data = {
         'id': 'id_hell_neighbour_game_form'
+    }
+    return __base_view(request, form=form, html_to_render=template, form_data=form_data)
+
+
+def saint_valentine_day_2023_pall(request):
+    form = forms.SaintValentineDay2023Form
+    template = 'Polls/polls/saint_valentine_day_2023_form.html'
+    form_data = {
+        'id': 'id_saint_valentine_day_2023_form'
     }
     return __base_view(request, form=form, html_to_render=template, form_data=form_data)

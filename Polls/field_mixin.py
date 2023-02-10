@@ -15,16 +15,19 @@ class BaseFieldMixin(object):
 
 
 class HiddenFieldMixin(BaseFieldMixin):
+    # HIDDEN_ARGS = {'type': 'hidden', 'style': 'display: none;', 'is_hidden': True}
+    HIDDEN_ARGS = {'style': 'display: none;', 'is_hidden': True}
+
     def update_kwargs(self, **kwargs):
         kwargs = super(HiddenFieldMixin, self).update_kwargs(**kwargs)
         self.hidden = kwargs.pop('hidden', False)
-        self.hidden_attrs = {'type': 'hidden', 'style': 'display: none;', 'is_hidden': True}
         self.attrs = kwargs.get('attrs')
 
         if self.hidden:
             attrs = kwargs.get('attrs', {})
-            attrs.update(self.hidden_attrs)
+            attrs.update(self.HIDDEN_ARGS)
             kwargs['attrs'] = attrs
+            kwargs.setdefault('required', False)
 
         return kwargs
 

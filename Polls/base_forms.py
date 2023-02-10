@@ -2,7 +2,7 @@ from django import forms
 from . import fields
 
 
-class BaseGamePall(forms.Form):
+class BaseGameForm(forms.Form):
     GAME_NAME = 'Default game name'
     RATE_CHOICES = (
         (None, 'Оцените игру'),
@@ -34,7 +34,7 @@ class BaseGamePall(forms.Form):
     comment = fields.TextAreaField(label='Оставьте ваш комментарий', max_length=4096)
 
     def __init__(self, *args, **kwargs):
-        super(BaseGamePall, self).__init__(*args, **kwargs)
+        super(BaseGameForm, self).__init__(*args, **kwargs)
         _fields = self.fields
         for field in _fields:
             current_field = _fields[field]

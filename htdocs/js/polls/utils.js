@@ -51,6 +51,10 @@ function showElem(elem) {
     let $elem = $(elem);
     $elem.closest('div.form-group').removeClass('d-none');
     $elem.show();
+
+    if ($elem.hasClass('select2')) {
+        initSelect2($elem);
+    }
 }
 
 function hideElem(elem) {
@@ -58,6 +62,10 @@ function hideElem(elem) {
     $elem.closest('div.form-group').addClass('d-none');
     $elem.hide();
     $elem.val("");
+
+    if ($elem.hasClass('select2')) {
+        initSelect2($elem);
+    }
 }
 
 function toArray(data) {
@@ -80,4 +88,22 @@ function getThisElem($elem, $default) {
         return $($default);
     }
     return $elem
+}
+
+function initSelect2($field) {
+    /*
+    function to init or re-init select2
+    function used to init and re-init field with its properties after show/hide actions of parent with class d-none
+    properties of width of select2 are related to parent.
+    In case of select2 width related to parent -> width on hidden parent is set to 0px
+    */
+    let ajaxConfig = AJAX_DEFAULT_SETTINGS;
+    try {
+        let jsonString = $field.data('select-2-config').replaceAll("'", "\"");
+        ajaxConfig = JSON.parse(jsonString);
+    } catch (e) {
+        console.log(e)
+    }
+
+    $field.select2(ajaxConfig);
 }
