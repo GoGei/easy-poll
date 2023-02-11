@@ -27,12 +27,12 @@ class Command(BaseCommand):
             label = item.get('label')
             reverse_data = item.get('reverse')
             try:
-                link = reverse(reverse_data, host='polls')
+                reverse(reverse_data, host='polls')
             except exceptions.NoReverseMatch:
                 went_error_count += 1
                 self.stdout.write(f'[!!!] Reverse for {reverse_data} not found', style_func=self.style.ERROR)
                 continue
-            form_link, created = FormLinks.objects.get_or_create(label=label, link=link)
+            form_link, created = FormLinks.objects.get_or_create(label=label, link=reverse_data)
 
             if created:
                 created_count += 1

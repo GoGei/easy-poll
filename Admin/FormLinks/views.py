@@ -46,6 +46,13 @@ def form_links_sync(request):
 
 
 @manager_required
+def form_links_clear(request):
+    FormLinks.objects.all().delete()
+    messages.success(request, 'Links are cleaned')
+    return redirect(reverse('admin-form-links-list', host='admin'))
+
+
+@manager_required
 def form_links_view(request, form_link_id):
     form_link = get_object_or_404(FormLinks, pk=form_link_id)
     return render(request, 'Admin/FormLinks/form_links_view.html', {'form_link': form_link})

@@ -13,10 +13,18 @@
                 <div class="col-sm-7">{{ form_link.id|default:"-" }}</div>
             </div>
             <div class="row form-group">
+                <div class="col-sm-5">Label</div>
+                <div class="col-sm-7">
+                    <a href="{{ form_link.absolute_url }}">
+                        {{ form_link.label|default:"-" }}
+                    </a>
+                </div>
+            </div>
+            <div class="row form-group">
                 <div class="col-sm-5">Link</div>
                 <div class="col-sm-7">
-                    <a href="{{ form_link.link }}">
-                        {{ form_link.label|default:"-" }}
+                    <a href="{{ form_link.absolute_url }}">
+                        {{ form_link.link|default:"-" }}
                     </a>
                 </div>
             </div>

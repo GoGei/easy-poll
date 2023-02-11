@@ -8,7 +8,7 @@ class ResponseTable(tables.Table):
     created_stamp = tables.DateTimeColumn(orderable=True)
     is_send = tables.BooleanColumn(orderable=True)
     on_validation = tables.BooleanColumn(orderable=True)
-    actions = tables.TemplateColumn(template_name='Admin/ResponseCollector/response_actions.html', orderable=False)
+    actions = tables.TemplateColumn(template_name='Admin/ResponseCollector/responses_actions.html', orderable=False)
 
     class Meta:
         model = ResponseCollector
