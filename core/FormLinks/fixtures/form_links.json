@@ -1,26 +1,32 @@
 [
   {
     "label": "Новогодний опросник 2022-2023",
-    "reverse": "new-year-poll-2022-2023"
+    "reverse": "new-year-poll-2022-2023",
+    "order_number": 6
   },
   {
     "label": "Пост новогодний опросник 2022-2023",
-    "reverse": "after-new-year-poll-2022-2023"
-  },
-  {
-    "label": "Опросник следующей встречи",
-    "reverse": "next-meet-preference"
-  },
-  {
-    "label": "Опросник \"Assassins creed 3\"",
-    "reverse": "assassins-creed-3-game-pall"
-  },
-  {
-    "label": "Опросник \"Как достать соседа\"",
-    "reverse": "hell-neighbour-game-pall"
+    "reverse": "after-new-year-poll-2022-2023",
+    "order_number": 5
   },
   {
     "label": "14 февраля (День Святого Валентина) 2023",
-    "reverse": "saint-valentine-day-2023-pall"
+    "reverse": "saint-valentine-day-2023-pall",
+    "order_number": 2
+  },
+  {
+    "label": "Опросник следующей встречи",
+    "reverse": "next-meet-preference",
+    "order_number": 1
+  },
+  {
+    "label": "Опросник \"Assassins creed 3\"",
+    "reverse": "assassins-creed-3-game-pall",
+    "order_number": 3
+  },
+  {
+    "label": "Опросник \"Как достать соседа\"",
+    "reverse": "hell-neighbour-game-pall",
+    "order_number": 4
   }
 ]

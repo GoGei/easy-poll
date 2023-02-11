@@ -12,7 +12,7 @@ from .forms import FormLinksFilterForm
 
 @manager_required
 def form_links_list(request):
-    form_links = FormLinks.objects.all().order_by('label')
+    form_links = FormLinks.objects.all().order_by('order_number')
 
     form_link_filter = FormLinksFilterForm(request.GET, queryset=form_links)
     form_links = form_link_filter.qs
@@ -47,7 +47,7 @@ def form_links_sync(request):
 
 @manager_required
 def form_links_clear(request):
-    FormLinks.objects.all().delete()
+    FormLinks.clear()
     messages.success(request, 'Links are cleaned')
     return redirect(reverse('admin-form-links-list', host='admin'))
 
@@ -56,3 +56,17 @@ def form_links_clear(request):
 def form_links_view(request, form_link_id):
     form_link = get_object_or_404(FormLinks, pk=form_link_id)
     return render(request, 'Admin/FormLinks/form_links_view.html', {'form_link': form_link})
+
+
+@manager_required
+def form_links_switch_order(request, form_link_id, increase=None):
+    form_link = get_object_or_404(FormLinks, pk=form_link_id)
+    page = request.GET.get('page') or 1
+
+    try:
+        current, switched_with = form_link.switch_order_numbers(increase)
+        messages.success(request, 'Form link order is switched %s <-> %s' % (current.label, switched_with.label))
+    except ValueError as e:
+        messages.warning(request, str(e))
+
+    return redirect("%s?page=%s" % (reverse('admin-form-links-list', host='admin'), page))

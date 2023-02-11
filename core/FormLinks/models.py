@@ -1,8 +1,10 @@
 from django.db import models
 from django_hosts import reverse
+from core.ResponseCollector.models import ResponseCollector
+from core.Utils.Mixins.models import OrderableMixin
 
 
-class FormLinks(models.Model):
+class FormLinks(OrderableMixin):
     label = models.CharField(max_length=128)
     link = models.CharField(max_length=128)
     wait_for_delete = models.BooleanField(default=False)
@@ -21,3 +23,8 @@ class FormLinks(models.Model):
     @property
     def absolute_url(self):
         return reverse(self.link, host='polls')
+
+    @classmethod
+    def clear(cls):
+        ResponseCollector.objects.all().delete()
+        cls.objects.all().delete()

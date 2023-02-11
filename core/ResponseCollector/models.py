@@ -7,7 +7,6 @@ from django.utils import timezone
 from django.core.mail import send_mail
 from django.utils.html import strip_tags
 from django.template.loader import render_to_string
-from core.FormLinks.models import FormLinks
 
 
 class ResponseCollector(models.Model):
@@ -24,6 +23,7 @@ class ResponseCollector(models.Model):
 
     @classmethod
     def create_from_response(cls, data, form_link, **kwargs):
+        from core.FormLinks.models import FormLinks
         response = cls(**kwargs)
         response.response = data
         response.form_link = FormLinks.get_by_url(form_link)

@@ -20,6 +20,7 @@
                     </a>
                 </div>
             </div>
+
             <div class="row form-group">
                 <div class="col-sm-5">Link</div>
                 <div class="col-sm-7">
@@ -27,6 +28,10 @@
                         {{ form_link.link|default:"-" }}
                     </a>
                 </div>
+            </div>
+             <div class="row form-group">
+                <div class="col-sm-5">Order number</div>
+                <div class="col-sm-7">{{ form_link.order_number|default:"-" }}</div>
             </div>
             <div class="row form-group">
                 <div class="col-sm-5">Wait for delete</div>

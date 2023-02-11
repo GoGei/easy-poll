@@ -9,5 +9,5 @@ class FormLinksTable(tables.Table):
 
     class Meta:
         model = FormLinks
-        fields = ('pk', 'label', 'wait_for_delete', 'actions')
+        fields = ('pk', 'label', 'order_number', 'wait_for_delete', 'actions')
         template_name = "django_tables2/bootstrap4.html"
