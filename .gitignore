@@ -8,6 +8,7 @@ env/
 
 static/
 media/
+dumps/
 
 config/local_settings.py
 
