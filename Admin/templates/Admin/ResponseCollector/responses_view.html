@@ -1,4 +1,9 @@
-{% extends 'Polls/polls_base.html' %}
+{% extends 'Admin/ResponseCollector/responses_base.html' %}
+
+{% block breadcrumbs %}
+    {{ block.super }}
+    <li class="breadcrumb-item active">View</li>
+{% endblock %}
 
 {% block content %}
     <div class="row">
@@ -29,4 +34,5 @@
             </div>
         </div>
     </div>
+    <a type="button" class="btn btn-info" href="{% url 'admin-form-links-list' %}">Back to list</a>
 {% endblock %}

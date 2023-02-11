@@ -7,6 +7,13 @@ clone repo:
 git clone https://github.com/GoGei/joker.git
 ```
 
+add hosts to **/etc/hosts** file:
+```
+127.0.0.1           easy-poll.local
+127.0.0.1       api.easy-poll.local
+127.0.0.1     admin.easy-poll.local
+```
+
 create virtual env
 ```bash
 python3.8 -m venv env

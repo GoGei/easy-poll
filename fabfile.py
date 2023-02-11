@@ -20,8 +20,13 @@ def _launch_django(project_path):
         port = random.randrange(1024, 5000)
 
     server_address = '127.0.0.1'
+    if os.path.exists('/etc/hosts'):
+        with open('/etc/hosts') as f:
+            if f.read().find(dj_settings.SITE_URL) != -1:
+                server_address = dj_settings.SITE_URL
+
     with lcd(project_path):
-        local(f'python manage.py runserver {server_address}:{port}', capture=False)
+        local(f'./manage.py runserver {server_address}:{port}', capture=False)
 
 
 @task
@@ -42,4 +47,4 @@ def deploy_local(branch=None):
 @task
 def check():
     local('python manage.py check')
-    local('time flake8 ./core ./Polls')
+    local('time flake8 ./core ./Polls ./Admin')

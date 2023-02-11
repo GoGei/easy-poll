@@ -3,11 +3,12 @@ from core.ResponseCollector.models import ResponseCollector
 
 
 class ResponseTable(tables.Table):
-    form_link = tables.TemplateColumn(template_name='Polls/responses/form_link_field.html', orderable=False)
+    form_link = tables.TemplateColumn(template_name='Admin/ResponseCollector/responses_form_link_field.html',
+                                      orderable=False)
     created_stamp = tables.DateTimeColumn(orderable=True)
     is_send = tables.BooleanColumn(orderable=True)
     on_validation = tables.BooleanColumn(orderable=True)
-    actions = tables.TemplateColumn(template_name='Polls/responses/response_actions.html', orderable=False)
+    actions = tables.TemplateColumn(template_name='Admin/ResponseCollector/response_actions.html', orderable=False)
 
     class Meta:
         model = ResponseCollector

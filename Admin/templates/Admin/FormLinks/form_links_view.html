@@ -1,0 +1,30 @@
+{% extends 'Admin/FormLinks/form_links_base.html' %}
+
+{% block breadcrumbs %}
+    {{ block.super }}
+    <li class="breadcrumb-item active">View</li>
+{% endblock %}
+
+{% block content %}
+    <div class="row">
+        <div class="col-sm-6">
+            <div class="row form-group">
+                <div class="col-sm-5">ID</div>
+                <div class="col-sm-7">{{ form_link.id|default:"-" }}</div>
+            </div>
+            <div class="row form-group">
+                <div class="col-sm-5">Link</div>
+                <div class="col-sm-7">
+                    <a href="{{ form_link.link }}">
+                        {{ form_link.label|default:"-" }}
+                    </a>
+                </div>
+            </div>
+            <div class="row form-group">
+                <div class="col-sm-5">Wait for delete</div>
+                <div class="col-sm-7">{{ form_link.wait_for_delete|default:"-" }}</div>
+            </div>
+        </div>
+    </div>
+    <a type="button" class="btn btn-info" href="{% url 'admin-form-links-list' %}">Back to list</a>
+{% endblock %}

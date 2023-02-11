@@ -7,6 +7,11 @@ SECRET_KEY = 'secret-key'
 DEBUG = True
 ALLOWED_HOSTS = ['*']
 
+SITE_URL = 'easy-poll'
+SITE_SCHEME = "http"
+PARENT_HOST = ".%s" % SITE_URL
+HOST_PORT = None
+SITE = "%s://%s:%s" % (SITE_SCHEME, SITE_URL, HOST_PORT)
 
 # Application definition
 INSTALLED_APPS = [
@@ -20,12 +25,15 @@ INSTALLED_APPS = [
     'widget_tweaks',
     'django_tables2',
     'django_filters',
+    'django_hosts',
     'core.Utils',
+    'core.User',
     'core.FormLinks',
     'core.ResponseCollector',
 ]
 
 MIDDLEWARE = [
+    'django_hosts.middleware.HostsRequestMiddleware',
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
@@ -33,9 +41,19 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+    'django_hosts.middleware.HostsResponseMiddleware',
 ]
 
 ROOT_URLCONF = 'urls'
+DEFAULT_HOST = 'polls'
+ROOT_HOSTCONF = 'hosts'
+
+CORS_ALLOW_ALL_ORIGINS = True
+CORS_ALLOW_CREDENTIALS = True
+CSRF_COOKIE_DOMAIN = '.easy-poll.local'
+SESSION_COOKIE_DOMAIN = '.easy-poll.local'
+
+AUTH_USER_MODEL = 'User.User'
 
 TEMPLATES = [
     {
@@ -43,6 +61,7 @@ TEMPLATES = [
         'DIRS': [
             BASE_DIR + 'core/templates/',
             BASE_DIR + 'Polls/templates/',
+            BASE_DIR + 'Admin/templates/',
         ],
         'APP_DIRS': True,
         'OPTIONS': {

@@ -1,0 +1,12 @@
+{% extends 'Admin/admin_base.html' %}
+
+{% block form-link-menu-active %} active {% endblock %}
+
+{% block head-label %}
+    Form links
+{% endblock %}
+
+{% block breadcrumbs %}
+    <li class="breadcrumb-item"><a href="{% url 'admin-home' %}">Home</a></li>
+    <li class="breadcrumb-item active"><a href="{% url 'admin-form-links-list' %}">Form links</a></li>
+{% endblock %}

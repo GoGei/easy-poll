@@ -1,0 +1,24 @@
+{% extends 'Admin/admin_base.html' %}
+{% load static %}
+
+{% block home-menu-active %} active {% endblock %}
+
+{% block breadcrumbs %}
+{% endblock %}
+
+{% block head-label %}
+    <div class="d-flex justify-content-center">
+        <h1>Welcome</h1>
+    </div>
+{% endblock %}
+
+{% block content %}
+{% endblock %}
+
+{% block extrajs %}
+    <script>
+        $(document).ready(function () {
+            $('.breadcrumb').remove();
+        })
+    </script>
+{% endblock %}

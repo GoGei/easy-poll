@@ -1,0 +1,2 @@
+# extra libraries
+flake8==4.0.1 ipython==8.4.0

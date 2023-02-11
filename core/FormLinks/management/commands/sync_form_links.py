@@ -2,7 +2,7 @@ import json
 
 from django.db import transaction
 from django.urls import exceptions
-from django.shortcuts import reverse
+from django_hosts import reverse
 
 from core.FormLinks.models import FormLinks
 from django.core.management.base import BaseCommand
@@ -27,7 +27,7 @@ class Command(BaseCommand):
             label = item.get('label')
             reverse_data = item.get('reverse')
             try:
-                link = reverse(reverse_data)
+                link = reverse(reverse_data, host='polls')
             except exceptions.NoReverseMatch:
                 went_error_count += 1
                 self.stdout.write(f'[!!!] Reverse for {reverse_data} not found', style_func=self.style.ERROR)

@@ -1,0 +1,12 @@
+{% extends 'Admin/admin_base.html' %}
+
+{% block responses-menu-active %} active {% endblock %}
+
+{% block head-label %}
+    Responses
+{% endblock %}
+
+{% block breadcrumbs %}
+    <li class="breadcrumb-item"><a href="{% url 'admin-home' %}">Home</a></li>
+    <li class="breadcrumb-item active"><a href="{% url 'admin-responses-list' %}">Responses</a></li>
+{% endblock %}
