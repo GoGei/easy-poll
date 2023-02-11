@@ -1,0 +1,11 @@
+{% extends 'Admin/FormLinks/form_links_base.html' %}
+
+{% block breadcrumbs %}
+    {{ block.super }}
+    <li class="breadcrumb-item active">Import</li>
+{% endblock %}
+
+{% block content %}
+    {% include 'base_form.html' with form=form %}
+{% endblock %}
+

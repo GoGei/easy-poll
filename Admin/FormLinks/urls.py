@@ -11,4 +11,7 @@ urlpatterns = [
          name='admin-form-links-increase'),
     path('<int:form_link_id>/decrease/', views.form_links_switch_order, kwargs={'increase': False},
          name='admin-form-links-decrease'),
+
+    path(r'import/', views.admin_form_links_import, name='admin-form-links-import'),
+    path(r'export/', views.admin_form_links_export, name='admin-form-links-export'),
 ]

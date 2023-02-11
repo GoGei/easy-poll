@@ -1,5 +1,6 @@
+import json
 import django_filters
-
+from django import forms
 from core.Utils.filtersets import BaseFilterForm
 from core.FormLinks.models import FormLinks
 
@@ -22,3 +23,27 @@ class FormLinksFilterForm(BaseFilterForm):
     class Meta:
         model = FormLinks
         fields = ['search', 'wait_for_delete']
+
+
+class FormLinksImportForm(forms.Form):
+    imported_file = forms.FileField(label='File',
+                                    widget=forms.ClearableFileInput(attrs={'accept': '.json'}))
+
+    def __init__(self, *args, **kwargs):
+        super(FormLinksImportForm, self).__init__(*args, **kwargs)
+
+    def clean(self):
+        cleaned_data = self.cleaned_data
+        _file = cleaned_data.get('imported_file')
+
+        try:
+            content = json.loads(_file.read())
+        except (ValueError, AttributeError):
+            raise forms.ValidationError('This is not valid JSON file')
+
+        cleaned_data.update({'content': content})
+        return cleaned_data
+
+    def save(self):
+        content = self.cleaned_data.get('content')
+        FormLinks.import_from_data(content)
