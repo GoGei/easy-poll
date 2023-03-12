@@ -1,12 +1,12 @@
-from typing import List, Dict
+from typing import List
 
 from django.db import models
 from django_hosts import reverse
 from core.ResponseCollector.models import ResponseCollector
-from core.Utils.Mixins.models import OrderableMixin, ExportableMixin
+from core.Utils.Mixins.models import ExportToJSONMixin, OrderableMixin
 
 
-class FormLinks(OrderableMixin, ExportableMixin):
+class FormLinks(ExportToJSONMixin, OrderableMixin):
     label = models.CharField(max_length=128)
     link = models.CharField(max_length=128)
     wait_for_delete = models.BooleanField(default=False)
@@ -26,35 +26,28 @@ class FormLinks(OrderableMixin, ExportableMixin):
     def absolute_url(self):
         return reverse(self.link, host='polls')
 
+    # export to json methods
     @classmethod
-    def clear(cls):
-        ResponseCollector.objects.all().delete()
-        cls.objects.all().delete()
+    def set_as_default(cls, obj):
+        raise NotImplementedError
 
     @classmethod
-    def get_data_to_export(cls) -> List[Dict]:
-        data = [
-            {
-                'label': item.label,
-                'link': item.link,
-                'wait_for_delete': item.wait_for_delete,
-                'order_number': item.order_number,
-            } for item in cls.objects.all()
-        ]
-        return data
+    def get_fields_to_export(cls) -> List[str]:
+        return ['label', 'link', 'wait_for_delete', 'order_number']
 
     @classmethod
-    def import_data(cls, data):
-        for item in data:
-            obj = cls.objects.filter(label=item.get('label'),
-                                     link=item.get('link')).first()
-            if not obj:
-                obj = cls(label=item.get('label'),
-                          link=item.get('link'))
-            obj.wait_for_delete = item.get('wait_for_delete')
-            obj.order_number = item.get('order_number')
-            obj.save()
+    def get_fields_on_get_or_create(cls) -> List[str]:
+        return ['label', 'link']
+
+    @classmethod
+    def get_extra_fields_on_import(cls) -> List[str]:
+        return ['wait_for_delete', 'order_number']
+
+    @classmethod
+    def validate_before_import(cls, data):
+        cls.check_unique(data, 'order_number')
 
     @classmethod
     def clear_previous(cls):
-        cls.clear()
+        ResponseCollector.objects.all().delete()
+        cls.objects.all().delete()

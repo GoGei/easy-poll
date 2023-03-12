@@ -1,4 +1,4 @@
-from typing import List, Dict
+from typing import List, Dict, Any
 from slugify import slugify
 
 from django.db import models, transaction
@@ -112,7 +112,7 @@ class OrderableMixin(models.Model):
     class Meta:
         abstract = True
 
-    order_number = models.BigIntegerField(db_index=True)
+    order_number = models.BigIntegerField(db_index=True, null=True)
 
     def get_context(self) -> dict:
         """ Context of filter out only logically related objects """
@@ -165,25 +165,107 @@ class OrderableMixin(models.Model):
         return self, other
 
 
-class ExportableMixin(models.Model):
+class ExportToJSONMixin(models.Model):
     class Meta:
         abstract = True
 
     @classmethod
-    def get_data_to_export(cls) -> List[Dict]:
+    def get_fields_to_export(cls) -> List[str]:
+        raise NotImplementedError
+
+    @classmethod
+    def get_fields_on_get_or_create(cls) -> List[str]:
+        raise NotImplementedError
+
+    @classmethod
+    def get_extra_fields_on_import(cls) -> List[str]:
+        raise NotImplementedError
+
+    @classmethod
+    def set_as_default(cls, obj):
+        raise NotImplementedError
+
+    @classmethod
+    def object_has_related_items(cls, obj):
+        return False
+
+    @classmethod
+    def object_to_dict(cls, item, fields=None):
+        data = {}
+        fields = fields or item.get_fields_to_export()
+        for field in fields:
+            data[field] = getattr(item, field)
+        return data
+
+    @classmethod
+    def data_on_get_or_create(cls, data, keys=None):
+        keys = keys or cls.get_fields_on_get_or_create()
+        return {key: value for key, value in data.items() if key in keys}
+
+    @classmethod
+    def get_data_to_export(cls) -> List[Dict[str, Any]]:
+        data = [cls.object_to_dict(item) for item in cls.objects.all()]
+        return data
+
+    @classmethod
+    def check_unique(cls, data, field):
+        values = set(item.get(field) for item in data)
+        if len(values) != len(data):
+            raise ValueError(f'Field "{field}" has to be unique')
+
+    @classmethod
+    def check_exactly_one(cls, data, field):
+        values = list(item.get(field) for item in data if item.get(field))
+        if len(values) != 1:
+            raise ValueError(f'It has to be exactly one item with active field "{field}"')
+
+    @classmethod
+    def validate_is_default(cls, data):
+        cls.check_exactly_one(data=data, field='is_default')
+
+    @classmethod
+    def validate_before_import(cls, data):
         raise NotImplementedError
 
     @classmethod
     def clear_previous(cls):
-        raise NotImplementedError
+        cls.objects.all().archive()
 
     @classmethod
-    def import_data(cls, data):
-        raise NotImplementedError
+    def set_extra(cls, obj, data):
+        fields = cls.get_extra_fields_on_import()
+        for field in fields:
+            value = data.get(field)
+            setattr(obj, field, value)
+        obj.save()
+        return obj
+
+    @classmethod
+    def get_export_settings(cls):
+        return {
+            'has_is_active': False,
+            'has_is_default': False
+        }
 
     @classmethod
     @transaction.atomic
     def import_from_data(cls, data):
         cls.clear_previous()
-        cls.import_data(data)
+        cls.validate_before_import(data)
+
+        export_settings = cls.get_export_settings()
+
+        for item in data:
+            obj, created = cls.objects.get_or_create(**cls.data_on_get_or_create(item))
+            cls.set_extra(obj, item)
+            obj.save()
+
+            if export_settings.get('has_is_active') and not item.get('is_active') and \
+                    not cls.object_has_related_items(obj):
+                obj.archive()
+
+            if export_settings.get('has_is_default') and item.get('is_default'):
+                cls.set_as_default(obj)
+                obj.restore()
+
         return True

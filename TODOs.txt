@@ -1,6 +1,2 @@
 - Film preferences (general questions)
 - Country trip preferences (general questions)
-
-- import/export/dump form links
-- add sequencer
-- move db to postgres

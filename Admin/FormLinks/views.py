@@ -49,7 +49,7 @@ def form_links_sync(request):
 
 @manager_required
 def form_links_clear(request):
-    FormLinks.clear()
+    FormLinks.clear_previous()
     messages.success(request, 'Links are cleaned')
     return redirect(reverse('admin-form-links-list', host='admin'))
 
