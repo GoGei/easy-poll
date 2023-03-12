@@ -28,5 +28,10 @@
     "label": "Опросник \"Как достать соседа\"",
     "reverse": "hell-neighbour-game-pall",
     "order_number": 4
+  },
+  {
+    "label": "Опросник для заказа других опросников",
+    "reverse": "other-poll-preferences-poll",
+    "order_number": 7
   }
 ]

@@ -10,4 +10,5 @@ urlpatterns = [
     url('^assassins-creed-3-game-pall/$', views.assassins_creed_3_game_pall, name='assassins-creed-3-game-pall'),
     url('^hell-neighbour-game-pall/$', views.hell_neighbour_game_pall, name='hell-neighbour-game-pall'),
     url('^saint-valentine-day-2023-pall/$', views.saint_valentine_day_2023_pall, name='saint-valentine-day-2023-pall'),
+    url('^other-poll-preferences-poll/$', views.other_poll_preferences_poll, name='other-poll-preferences-poll'),
 ]

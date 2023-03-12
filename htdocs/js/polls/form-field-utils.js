@@ -95,7 +95,7 @@ function handleDate($field, form_field, on_past, on_today, on_future) {
     return selected_date;
 }
 
-function handleMultipleChoice($field, form_field, conditions, on_empty = null) {
+function handleMultipleChoice($field, form_field, conditions, on_empty = null, on_select_any=null) {
     clearField($field);
     let data = getJsonData();
     let selected = toArray(data[form_field] || $field.val());
@@ -104,6 +104,11 @@ function handleMultipleChoice($field, form_field, conditions, on_empty = null) {
         if (on_empty) {
             setComment($field, on_empty);
         }
+        return;
+    }
+
+    if (selected && on_select_any) {
+        setComment($field, on_select_any);
         return;
     }
 

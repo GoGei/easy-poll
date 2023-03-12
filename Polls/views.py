@@ -1,3 +1,4 @@
+from typing import Type, Dict
 from django.shortcuts import render, redirect, reverse
 from core.FormLinks.models import FormLinks
 from core.ResponseCollector.models import ResponseCollector
@@ -9,7 +10,7 @@ def home_index(request):
     return render(request, 'Polls/index.html', {'forms_links': forms_links})
 
 
-def __base_view(request, form, html_to_render, form_data=dict):
+def __base_view(request, form, html_to_render, form_data=Type[Dict]):
     """ General view to render and collect response """
     if '_cancel' in request.POST:
         return redirect(reverse('index'))
@@ -94,5 +95,14 @@ def saint_valentine_day_2023_pall(request):
     template = 'Polls/polls/saint_valentine_day_2023_form.html'
     form_data = {
         'id': 'id_saint_valentine_day_2023_form'
+    }
+    return __base_view(request, form=form, html_to_render=template, form_data=form_data)
+
+
+def other_poll_preferences_poll(request):
+    form = forms.OtherPollPreferences
+    template = 'Polls/polls/other_poll_preferences_form.html'
+    form_data = {
+        'id': 'id_other_poll_preferences_form'
     }
     return __base_view(request, form=form, html_to_render=template, form_data=form_data)

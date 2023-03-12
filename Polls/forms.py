@@ -1,5 +1,9 @@
 from django import forms
 from django.utils import timezone
+from django_hosts import reverse
+
+from core.FormLinks.models import FormLinks
+
 from . import fields
 from . import base_forms
 
@@ -231,3 +235,25 @@ class SaintValentineDay2023Form(forms.Form):
             self.add_error('your_guess', 'вот сама же выбрала, что хочешь угадать, но ниче не написала')
 
         return data
+
+
+class OtherPollPreferences(forms.Form):
+    AMOUNT_OF_QUESTIONS = [
+        (None, 'Выберите пожалуйста'),
+        (1, 'Очень мало (до 3)'),
+        (2, 'Мало (3-5)'),
+        (3, 'Средне (6-8)'),
+        (4, 'Много (9-12)'),
+        (5, 'Очень много (13+)')
+    ]
+
+    enjoy_polls = fields.YesNoChoiceField(label='Вам нравятся последние опросники, которые вы проходили?')
+    poll_choices = fields.AjaxTypedMultipleChoiceField(label='Какие именно опросники вам понравились?',
+                                                       coerce=FormLinks.objects.filter(wait_for_delete=False).all(),
+                                                       data_url=reverse('api-v1:form-links-list', host='api'))
+    preferable_amount_of_questions = fields.ChoiceFields(label='Сколько вопросов вас устраивает в опросниках?',
+                                                         choices=AMOUNT_OF_QUESTIONS)
+    change_requests = fields.TextAreaField(label='Ваши предпочтения по поводу опросников', max_length=4096,
+                                           attrs={'rows': '5'})
+    new_poll_themes = fields.TextAreaField(label='Какие бы вы хотели видеть опросники?', max_length=4096,
+                                           attrs={'rows': '5'})

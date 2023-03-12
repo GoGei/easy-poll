@@ -126,3 +126,43 @@ class DateTimeField(forms.DateField, GeneralFieldMixin):
         kwargs.setdefault('widget', forms.DateTimeInput(attrs=attrs))
 
         super(DateTimeField, self).__init__(**kwargs)
+
+
+class AjaxChoiceFieldMixin(GeneralFieldMixin):
+    def __init__(self, **kwargs):
+        kwargs = GeneralFieldMixin.update_kwargs(self, **kwargs)
+
+        data_url = kwargs.pop('data_url')
+        attrs = kwargs.get('attrs', {})
+        attrs.update({'data-ajax-url': data_url,
+                      'data-placeholder': attrs.get('placeholder', 'Выбери варианты')
+                      })
+        kwargs['attrs'] = attrs
+        super(AjaxChoiceFieldMixin, self).__init__(**kwargs)
+
+
+class AjaxTypedChoiceFieldMixin(AjaxChoiceFieldMixin):
+    def __init__(self, **kwargs):
+        kwargs = GeneralFieldMixin.update_kwargs(self, **kwargs)
+
+        coerce = kwargs.pop('coerce', {})
+        choices = [(item.pk, item.label) for item in coerce]
+        kwargs['choices'] = choices
+
+        super(AjaxTypedChoiceFieldMixin, self).__init__(**kwargs)
+
+
+class AjaxChoiceField(AjaxChoiceFieldMixin, ChoiceFields):
+    pass
+
+
+class AjaxTypedChoiceField(AjaxTypedChoiceFieldMixin, ChoiceFields):
+    pass
+
+
+class AjaxMultipleChoiceField(AjaxChoiceFieldMixin, MultipleChoiceField):
+    pass
+
+
+class AjaxTypedMultipleChoiceField(AjaxTypedChoiceFieldMixin, MultipleChoiceField):
+    pass
