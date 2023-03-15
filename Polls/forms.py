@@ -257,3 +257,73 @@ class OtherPollPreferences(forms.Form):
                                            attrs={'rows': '5'})
     new_poll_themes = fields.TextAreaField(label='Какие бы вы хотели видеть опросники?', max_length=4096,
                                            attrs={'rows': '5'})
+
+
+class AfterMeetPoll(forms.Form):
+    arrive_date = fields.DateField(label='Когда вы приезжали?')
+    departure_date = fields.DateField(label='Когда вы уехали?')
+
+    enjoy_meal = fields.YesNoChoiceField(label='Вам нравится как вас кормят?')
+    enjoy_treat = fields.YesNoChoiceField(label='Вам нравится как с вами обращаются?')
+    has_enough_free_time = fields.YesNoChoiceField(label='Вам хватает свободного времени?')
+    enjoy_free_time = fields.YesNoChoiceField(label='Вам нравится как вы проводите своё свободное время?')
+    has_enough_busy_time = fields.YesNoChoiceField(label='Вам хватало вашего занятого времени?')
+    enjoy_busy_time = fields.YesNoChoiceField(label='Вам нравится как вы проводите своё занятое время?')
+    has_enough_devote_time = fields.YesNoChoiceField(label='Вам достаточно уделяли времени?')
+    enjoy_devote_time = fields.YesNoChoiceField(label='Вам нравится то, как мы проводим с вами время?')
+    has_seen_reply_on_yoga = fields.YesNoChoiceField(
+        label='Вы уже видели мой комментарий по поводу "Студии йоги и красоты"?')
+    has_enjoy_reply_on_yoga = fields.YesNoChoiceField(
+        label='Вам понравился отзыв "Студии йоги и красоты"?')
+
+    want_being_time_comment = fields.YesNoChoiceField(
+        label='Хотите оставить комментарий по поводу вашего пребывания у меня?')
+    being_time_comment = fields.TextAreaField(label='Комментарий вашего физического пребывания', hidden=True,
+                                              attrs={'rows': 5})
+
+    want_spend_time_comment = fields.YesNoChoiceField(
+        label='Хотите оставить комментарий по поводу вашего времяпрепровождения?')
+    spend_time_comment = fields.TextAreaField(label='Комментарий вашего морального пребывания', hidden=True,
+                                              attrs={'rows': 5})
+
+    want_yoga_comment = fields.YesNoChoiceField(
+        label='Хотите оставить комментарий по поводу вашего йога-препровождения?')
+    yoga_comment = fields.TextAreaField(label='Комментарий вашего йога-пребывания', hidden=True,
+                                        attrs={'rows': 5})
+
+    comment = fields.TextAreaField(label='Общий комментарий', attrs={'rows': 5})
+
+    def clean(self):
+        data = self.cleaned_data
+        today = timezone.now().date()
+
+        arrive_date = data.get('arrive_date')
+        departure_date = data.get('departure_date')
+
+        if arrive_date and departure_date:
+            if arrive_date > departure_date:
+                msg = 'Да, давай, ПРИЕДЬ раньше, чем УЕДЬ'
+                self.add_error('arrive_date', msg)
+                self.add_error('departure_date', msg)
+
+            if arrive_date > today:
+                msg = 'Да, давай, ПРИЕДЬ в будущем'
+                self.add_error('arrive_date', msg)
+
+            if departure_date > today:
+                msg = 'Да, давай, УЕДЬ в будущем'
+                self.add_error('departure_date', msg)
+
+        comment_pairs = (
+            ('want_being_time_comment', 'being_time_comment'),
+            ('want_spend_time_comment', 'spend_time_comment'),
+            ('want_yoga_comment', 'yoga_comment'),
+        )
+
+        for boolean_field, comment_field in comment_pairs:
+            choice = data.get(boolean_field)
+            comment = data.get(comment_field)
+            if bool(choice) and not bool(comment):
+                self.add_error(comment_field, 'Зачем тогда выбирала "Да"?')
+
+        return data

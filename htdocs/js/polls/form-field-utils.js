@@ -1,20 +1,24 @@
-function handleYesNoChoice($field, form_field, comment_on_false, comment_on_true, $comment = null) {
+function handleYesNoChoice($field, form_field, comment_on_false, comment_on_true,
+                           $comment = null, show_comment_field_on_true = true) {
     clearField($field);
     let data = getJsonData();
     let choice = data[form_field] || $field.val();
-
     if (choice === 'False') {
-        setComment($field, comment_on_false);
-        if ($comment) {
-            showElem($comment);
+        if (comment_on_false) {
+            setComment($field, comment_on_false);
         }
     } else if (choice === 'True') {
-        setComment($field, comment_on_true);
-        if ($comment) {
-            hideElem($comment);
+        if (comment_on_true) {
+            setComment($field, comment_on_true);
         }
-    } else {
-        if ($comment) {
+    }
+
+    if ($comment) {
+        if (choice === 'False' && show_comment_field_on_true === false) {
+            showElem($comment);
+        } else if (choice === 'True' && show_comment_field_on_true === true) {
+            showElem($comment);
+        } else {
             hideElem($comment);
         }
     }
@@ -95,7 +99,7 @@ function handleDate($field, form_field, on_past, on_today, on_future) {
     return selected_date;
 }
 
-function handleMultipleChoice($field, form_field, conditions, on_empty = null, on_select_any=null) {
+function handleMultipleChoice($field, form_field, conditions, on_empty = null, on_select_any = null) {
     clearField($field);
     let data = getJsonData();
     let selected = toArray(data[form_field] || $field.val());
@@ -193,5 +197,34 @@ function handleRelatedYesNoFields($current, form_field1, form_field2, comments,
         setComment($current, comments['false-true']);
     } else if (formField1 === 'False' && formField2 === 'False' && comments['false-false']) {
         setComment($current, comments['false-false']);
+    }
+}
+
+function handleRelatedDates($date1, $date2, date1_field, date2_field,
+                            on_1st_greater = null, on_2nd_greater = null, on_equal = null) {
+    let data = getJsonData();
+    let date1 = data[date1_field] || $date1.val();
+    let date2 = data[date2_field] || $date2.val();
+
+    if (!(date1 && date2)) {
+        return
+    }
+
+    date1 = new Date(date1).toISOString().split('T')[0];
+    date2 = new Date(date2).toISOString().split('T')[0];
+
+    let msg = null;
+    if ((date1 > date2) && (on_1st_greater)) {
+        msg = on_1st_greater;
+    } else if ((date1 < date2) && (on_2nd_greater)) {
+        msg = on_2nd_greater;
+    } else if ((date1 < date2) && (on_equal)) {
+        msg = on_equal;
+    }
+
+    if (msg) {
+        clearField($date1);
+        clearField($date2);
+        setComment(getThisElem($(this), $date2), msg);
     }
 }

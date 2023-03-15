@@ -8,3 +8,4 @@ let ON_CLICK = 'focusout click';
 let ON_TEXT = 'focusout click keypress';
 let ON_SELECT = 'focusout click change';
 let ON_DATE = 'focusout click change';
+let ON_DATE_SELECTED = 'change';

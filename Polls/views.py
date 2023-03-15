@@ -106,3 +106,12 @@ def other_poll_preferences_poll(request):
         'id': 'id_other_poll_preferences_form'
     }
     return __base_view(request, form=form, html_to_render=template, form_data=form_data)
+
+
+def after_meet_poll(request):
+    form = forms.AfterMeetPoll
+    template = 'Polls/polls/after_meet_poll_form.html'
+    form_data = {
+        'id': 'id_after_meet_poll_form'
+    }
+    return __base_view(request, form=form, html_to_render=template, form_data=form_data)

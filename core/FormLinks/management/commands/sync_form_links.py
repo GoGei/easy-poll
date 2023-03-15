@@ -34,11 +34,7 @@ class Command(BaseCommand):
                 self.stdout.write(f'[!!!] Reverse for {reverse_data} not found', style_func=self.style.ERROR)
                 continue
 
-            form_link = FormLinks.objects.filter(label=label, link=reverse_data)
-            created = False
-            if not form_link:
-                form_link = FormLinks(label=label, link=reverse_data)
-                created = True
+            form_link, created = FormLinks.objects.get_or_create(label=label, link=reverse_data)
 
             if created:
                 created_count += 1

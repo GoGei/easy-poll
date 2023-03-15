@@ -33,5 +33,10 @@
     "label": "Опросник для заказа других опросников",
     "reverse": "other-poll-preferences-poll",
     "order_number": 7
+  },
+  {
+    "label": "Опросник после встречи",
+    "reverse": "after-meet-poll",
+    "order_number": 8
   }
 ]
