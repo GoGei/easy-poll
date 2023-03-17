@@ -122,15 +122,24 @@ function handleMultipleChoice($field, form_field, conditions, on_empty = null, o
         }
 
         let on_selected = conditions[choice]['on_selected'];
-        let on_not_selected = conditions[choice]['on_not_selected'];
         let is_selected = inArray(choice, selected);
 
         if (on_selected && is_selected) {
             setComment($field, on_selected);
-        } else if (on_not_selected && !is_selected) {
-            setComment($field, on_not_selected);
+        }
+    });
+
+    $.each(conditions, function(key, condition) {
+        if (!condition) {
+            return true;
         }
 
+        let on_not_selected = condition['on_not_selected'];
+        let is_selected = inArray(key, selected);
+
+        if (on_not_selected && !is_selected) {
+            setComment($field, on_not_selected);
+        }
     });
 
     return selected;

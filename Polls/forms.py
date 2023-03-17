@@ -4,8 +4,7 @@ from django_hosts import reverse
 
 from core.FormLinks.models import FormLinks
 
-from . import fields
-from . import base_forms
+from . import fields, base_forms
 
 
 class NewYearPoll_2022_2023_Form(forms.Form):
@@ -325,5 +324,69 @@ class AfterMeetPoll(forms.Form):
             comment = data.get(comment_field)
             if bool(choice) and not bool(comment):
                 self.add_error(comment_field, 'Зачем тогда выбирала "Да"?')
+
+        return data
+
+
+class InProgressMeetPoll(forms.Form):
+    THINGS_TO_DO = (
+        ('walk', 'Гулять'),
+        ('stay_home', 'Провести время дома'),
+        ('play_games', 'Играть в игры'),
+        ('watch_movies', 'Смотреть видео материалы для просмотра'),
+        ('go_date', 'Сходить на свидание'),
+        ('yoga', 'Заниматься йогой'),
+        ('study', 'Учиться'),
+    )
+    PLACES_TO_GO = (
+        ('katowice_center', 'Центр Катовице'),
+        ('cafe', 'Кафе'),
+        ('restaurant', 'Ресторан'),
+        ('park', 'Парк'),
+        ('cinema', 'Кино'),
+        ('other_city', 'Другой город'),
+        ('sushi', 'Суши'),
+        ('bar', 'Бар'),
+    )
+    arrive_date = fields.DateField(label='Когда вы приехали?')
+    departure_date = fields.DateField(label='Когда вы уедете?')
+
+    enjoy_meet = fields.YesNoChoiceField(label='Вас устроило как вас встретили?')
+    enjoy_food = fields.YesNoChoiceField(label='Вас устроило как вас кормят?')
+    enjoy_food_you_cooked = fields.YesNoChoiceField(
+        label='Вас готовили что-то мне? (Там было "Вы", но так даже забавлее)')
+
+    devote_enough_time = fields.YesNoChoiceField(label='Вам уделяли достаточно времени?')
+    time_change_request = fields.TextAreaField(label='Что бы вы хотели поменять в проведении своего времени?')
+
+    want_things_to_do = fields.MultipleChoiceFieldWithCustomInput(label='Чем бы вы хотели заняться?',
+                                                                  choices=THINGS_TO_DO)
+
+    enjoy_movies = fields.YesNoChoiceField(label='Вам понравились подобранные вам видео материалы для просмотра?')
+    movies_comment = fields.TextAreaField(label='Комментарий о подобранных вам видео материалах?')
+
+    places_to_go = fields.MultipleChoiceFieldWithCustomInput(label='Куда бы вы хотели сходить?',
+                                                             choices=PLACES_TO_GO)
+
+    def clean(self):
+        data = self.cleaned_data
+        today = timezone.now().date()
+
+        arrive_date = data.get('arrive_date')
+        departure_date = data.get('departure_date')
+
+        if arrive_date and departure_date:
+            if arrive_date > departure_date:
+                msg = 'Да, давай, ПРИЕДЬ раньше, чем УЕДЬ'
+                self.add_error('arrive_date', msg)
+                self.add_error('departure_date', msg)
+
+            if arrive_date >= today:
+                msg = 'Да, давай, ПРИЕДЬ в будущем'
+                self.add_error('arrive_date', msg)
+
+            if departure_date <= today:
+                msg = 'Да, давай, УЕДЬ в прошлом'
+                self.add_error('departure_date', msg)
 
         return data

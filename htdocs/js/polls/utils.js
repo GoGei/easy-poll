@@ -80,7 +80,7 @@ function inArray(item, data) {
         return false
     }
     data = toArray(data);
-    return data.indexOf(item) !== -1
+    return Boolean(data.indexOf(item) !== -1);
 }
 
 function getThisElem($elem, $default) {

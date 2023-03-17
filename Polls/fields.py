@@ -105,6 +105,11 @@ class MultipleChoiceFieldWithCustomInput(forms.CharField, GeneralFieldMixin):
             raise ValidationError(self.error_messages['invalid_list'], code='invalid_list')
         return [str(val) for val in value]
 
+    def validate(self, value):
+        """Validate that the input is a list or tuple."""
+        if self.required and not value:
+            raise ValidationError(self.error_messages['required'], code='required')
+
 
 class DateField(forms.DateField, GeneralFieldMixin):
     def __init__(self, **kwargs):

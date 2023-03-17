@@ -115,3 +115,12 @@ def after_meet_poll(request):
         'id': 'id_after_meet_poll_form'
     }
     return __base_view(request, form=form, html_to_render=template, form_data=form_data)
+
+
+def in_progress_meet_poll(request):
+    form = forms.InProgressMeetPoll
+    template = 'Polls/polls/in_progress_meet_poll_form.html'
+    form_data = {
+        'id': 'id_in_progress_meet_poll_form'
+    }
+    return __base_view(request, form=form, html_to_render=template, form_data=form_data)

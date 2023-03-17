@@ -38,5 +38,10 @@
     "label": "Опросник после встречи",
     "reverse": "after-meet-poll",
     "order_number": 8
+  },
+  {
+    "label": "Опросник в процессе встречи",
+    "reverse": "in-progress-meet-poll",
+    "order_number": 9
   }
 ]
