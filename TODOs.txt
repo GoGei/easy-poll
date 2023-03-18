@@ -1,2 +1,4 @@
 - Film preferences (general questions)
 - Country trip preferences (general questions)
+- Game preferences (general questions)
+- Date preferences (general questions)
